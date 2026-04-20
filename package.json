@@ -1,0 +1,139 @@
+{
+  "name": "buquanshu",
+  "version": "0.1.0",
+  "description": "Windows-first desktop edition for building, maintaining, and browsing local classical music libraries.",
+  "author": "Introduction to Classical Music Contributors",
+  "private": false,
+  "build": {
+    "executableName": "不全书",
+    "appId": "com.classical.guide.desktop.note",
+    "productName": "\u4e0d\u5168\u4e66",
+    "directories": {
+      "output": "output/releases"
+    },
+    "files": [
+      "package.json",
+      "apps/desktop/**/*",
+      "apps/owner/web/**/*",
+      "apps/site/**/*",
+      "packages/**/*",
+      "data/**/*",
+      "materials/**/*",
+      "output/runtime/**/*",
+      "output/site/**/*",
+      "node_modules/astro/templates/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "tools/recording-retrieval-service/app/dist/portable",
+        "to": "recording-retrieval-service",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "asar": true,
+    "afterPack": "scripts/electron-after-pack.mjs",
+    "win": {
+      "icon": "apps/desktop/assets/app-icon.ico",
+      "signAndEditExecutable": false,
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "artifactName": "\u4e0d\u5168\u4e66 Setup ${version}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "include": "scripts/windows/installer-compat.nsh",
+      "installerIcon": "apps/desktop/assets/app-icon.ico",
+      "uninstallerIcon": "apps/desktop/assets/app-icon.ico",
+      "deleteAppDataOnUninstall": false
+    },
+    "asarUnpack": [
+      "apps/**/*",
+      "packages/**/*",
+      "data/**/*",
+      "materials/**/*",
+      "output/runtime/apps/owner/**/*",
+      "output/runtime/packages/**/*",
+      "output/runtime/scripts/**/*",
+      "node_modules/**/*"
+    ]
+  },
+  "main": "output/runtime/apps/desktop/main.js",
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "audit:text": "node scripts/audit-text-encoding.mjs",
+    "assets:prepare": "node scripts/prepare-shared-assets.mjs",
+    "bootstrap:windows": "powershell -ExecutionPolicy Bypass -File scripts/bootstrap-windows.ps1",
+    "doctor:windows": "powershell -ExecutionPolicy Bypass -File scripts/doctor-windows.ps1",
+    "dev": "npm run assets:prepare && npm run build:indexes && astro dev --root apps/site --host 127.0.0.1 --port 4321",
+    "build": "npm run assets:prepare && npm run runtime:build && node output/runtime/scripts/build-library-site.js",
+    "build:library": "npm run assets:prepare && npm run runtime:build && node output/runtime/scripts/build-library-site.js",
+    "preview": "astro preview --root apps/site",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:indexes": "npm run runtime:build && node output/runtime/scripts/build-indexes.js",
+    "entity-vitals:audit": "npm run runtime:build && node scripts/audit-entity-vitals.mjs",
+    "entity-vitals:sync": "npm run runtime:build && node scripts/sync-entity-vitals-review.mjs && node scripts/apply-entity-vitals-review.mjs",
+    "import:legacy": "npm run runtime:build && node output/runtime/scripts/import-legacy.js",
+    "recording:legacy-audit": "npm run runtime:build && node output/runtime/scripts/audit-recording-legacy-alignment.js",
+    "recording:live-audit": "npm run runtime:build && node scripts/audit-recording-retrieval-live.mjs",
+    "recording:live-verify": "npm run runtime:build && node scripts/verify-recording-retrieval-live-integration.mjs",
+    "reference:audit": "npm run runtime:build && node output/runtime/scripts/audit-reference-registry.js",
+    "reference:query": "npm run runtime:build && node output/runtime/scripts/query-reference-registry.js",
+    "reference:sync": "npm run runtime:build && node output/runtime/scripts/sync-reference-registry.js",
+    "retrieval:portable:build": "powershell -ExecutionPolicy Bypass -File tools/recording-retrieval-service/app/packaging/build-portable.ps1",
+    "owner": "npm run assets:prepare && npm run runtime:build && node output/runtime/apps/owner/server/owner-app.js",
+    "desktop:dev": "npm run assets:prepare && npm run runtime:build && electron .",
+    "desktop:dist": "node scripts/clean-desktop-release.mjs && npm run build && npm run retrieval:portable:build && electron-builder --win nsis && node scripts/patch-release-icons.mjs",
+    "package:windows": "npm run doctor:windows && npm run desktop:dist",
+    "astro:check": "node --max-old-space-size=8192 node_modules/astro/astro.js check --root apps/site",
+    "check": "npm run assets:prepare && npm run audit:text && npm run entity-vitals:audit && npm run astro:check && vitest run",
+    "runtime:build": "tsc -p tsconfig.runtime.json"
+  },
+  "dependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/sanitize-html": "^2.16.1",
+    "astro": "^5.18.1",
+    "cheerio": "^1.2.0",
+    "express": "^5.2.1",
+    "iconv-lite": "^0.7.2",
+    "markdown-it": "^14.1.1",
+    "sanitize-html": "^2.17.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.12.2",
+    "electron": "^41.2.1",
+    "electron-builder": "^26.0.12",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.4"
+  },
+  "overrides": {
+    "@astrojs/language-server": "2.16.6",
+    "defu": "6.1.7",
+    "devalue": "5.7.1",
+    "h3": "1.15.11",
+    "lodash": "4.18.1",
+    "path-to-regexp": "8.4.2",
+    "picomatch": "4.0.4",
+    "anymatch": {
+      "picomatch": "2.3.2"
+    },
+    "smol-toml": "1.6.1",
+    "undici": "7.24.8",
+    "vite": "6.4.2",
+    "volar-service-yaml": "0.0.70",
+    "yaml": "2.8.3",
+    "yaml-language-server": "1.22.0"
+  }
+}

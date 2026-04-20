@@ -1,0 +1,18 @@
+---
+import { readGeneratedSite } from "@/lib/library-store";
+
+const site = await readGeneratedSite();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div>
+      <strong>{site.title}</strong>
+      <p>{site.copyrightNotice}</p>
+    </div>
+    <div>
+      <span>{site.contact.label}</span>
+      <p>{site.contact.value}</p>
+    </div>
+  </div>
+</footer>

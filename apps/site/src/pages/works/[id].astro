@@ -1,0 +1,101 @@
+---
+import EntityInfoPanel from "@/components/EntityInfoPanel.astro";
+import ExpandableSummary from "@/components/ExpandableSummary.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildRecordingListEntry, getWebsiteDisplay } from "@/lib/display";
+import { readGeneratedArticles, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { resolveSiteImageSrc } from "@/lib/site-assets";
+
+export async function getStaticPaths() {
+  const library = await readGeneratedLibrary();
+  return library.works.map((work) => ({
+    params: {
+      id: work.id,
+    },
+    props: {
+      work,
+    },
+  }));
+}
+
+const { work } = Astro.props;
+const [site, library, articles] = await Promise.all([readGeneratedSite(), readGeneratedLibrary(), readGeneratedArticles()]);
+const composer = library.composers.find((item) => item.id === work.composerId);
+const linkedArticle = articles.find((article) => article.id === work.infoPanel?.articleId);
+const groups = work.groupIds
+  .map((groupId) => library.workGroups.find((item) => item.id === groupId))
+  .filter(Boolean);
+
+const recordings = library.recordings
+  .filter((recording) => recording.workId === work.id)
+  .sort((left, right) => left.sortKey.localeCompare(right.sortKey, "zh-Hans-CN"))
+  .map((recording) => {
+    const display = buildRecordingListEntry(recording, library);
+
+    return {
+      ...recording,
+      cardTitle: display.title,
+      cardSecondaryText: display.secondaryText,
+      cardMetaText: display.metaText,
+      cardNoteExcerpt: display.noteExcerpt,
+      imageSrc: resolveSiteImageSrc(recording.images[0]?.src ?? ""),
+    };
+  });
+---
+
+<BaseLayout title={`${site.title} | ${work.title}`} description={work.summary || `${work.title} 的推荐版本。`}>
+  <div class="container page-section">
+    <section class="section-heading section-heading--centered">
+      <p class="section-heading__eyebrow">Work</p>
+      <h1>{work.title}</h1>
+      <p class="page-note">
+        {composer ? getWebsiteDisplay(composer).heading : "未知作曲家"}
+        {groups.length > 0 ? ` / ${groups.map((group) => group?.title).join(" / ")}` : ""}
+      </p>
+      {work.titleLatin && <p class="page-lead">{work.titleLatin}</p>}
+      {work.catalogue && <p class="page-note">作品号：{work.catalogue}</p>}
+    </section>
+
+    {work.summary && <ExpandableSummary text={work.summary} className="body-copy" containerClassName="composer-summary" />}
+
+    <EntityInfoPanel infoPanel={work.infoPanel} article={linkedArticle} />
+
+    <div class="section-divider"></div>
+
+    <section>
+      <div class="section-heading section-heading--centered section-heading--subsection">
+        <p class="section-heading__eyebrow">Recommended Recordings</p>
+        <h2>推荐版本</h2>
+      </div>
+
+      {recordings.length ? (
+        <div class="work-recording-list">
+          {recordings.map((recording) => (
+            <article class="work-recording">
+              {recording.imageSrc ? (
+                <a class="work-recording__thumb-link" href={`/recordings/${recording.id}/`}>
+                  <img class="work-recording__thumb" src={recording.imageSrc} alt={recording.title} loading="lazy" />
+                </a>
+              ) : (
+                <div class="work-recording__thumb work-recording__thumb--empty">无图</div>
+              )}
+
+              <div class="work-recording__body">
+                <h3><a href={`/recordings/${recording.id}/`}>{recording.cardTitle}</a></h3>
+                {recording.cardSecondaryText && <p class="page-note">{recording.cardSecondaryText}</p>}
+                {recording.cardMetaText && <p class="page-note">{recording.cardMetaText}</p>}
+                {recording.cardNoteExcerpt && <p>{recording.cardNoteExcerpt}</p>}
+              </div>
+
+              <div class="work-recording__meta">
+                {recording.isPrimaryRecommendation ? <span>主推荐</span> : <span>推荐</span>}
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p class="page-note">该作品暂未关联推荐版本。</p>
+      )}
+    </section>
+  </div>
+</BaseLayout>

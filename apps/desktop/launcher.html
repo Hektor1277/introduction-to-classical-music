@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>不全书启动器</title>
+    <link rel="stylesheet" href="./launcher.css" />
+  </head>
+  <body>
+    <div class="launcher-frame">
+      <header class="launcher-chrome">
+        <div class="launcher-chrome__brand">
+          <img class="launcher-chrome__icon" src="./assets/app-icon.png" alt="不全书图标" />
+          <span class="launcher-chrome__title">不全书</span>
+        </div>
+        <div class="launcher-chrome__drag" aria-hidden="true"></div>
+        <div class="launcher-window-controls" aria-label="窗口控制">
+          <button type="button" class="launcher-window-button" data-window-action="minimize" aria-label="最小化">─</button>
+          <button type="button" class="launcher-window-button launcher-window-button--close" data-window-action="close" aria-label="关闭">×</button>
+        </div>
+      </header>
+
+      <main class="launcher-shell">
+        <section class="launcher-card">
+          <div class="launcher-content">
+            <section class="launcher-page launcher-page--active" data-page="main">
+              <p class="launcher-card__eyebrow">Introduction to Classical Music</p>
+              <h1>不全书桌面启动器</h1>
+
+              <div class="launcher-current-row">
+                <div class="launcher-current-inline">
+                  <strong>当前活动库</strong>
+                  <span id="launcher-library-name">正在读取</span>
+                </div>
+                <button type="button" class="launcher-text-button" data-view-action="details">详情</button>
+              </div>
+
+              <div class="launcher-actions">
+                <button type="button" data-launch-action="library">
+                  <span class="launcher-action-button__icon"><img src="./assets/G-clef.png" alt="" /></span>
+                  <span class="launcher-action-button__label">打开本地构建库</span>
+                </button>
+                <button type="button" data-launch-action="owner">
+                  <span class="launcher-action-button__icon"><img src="./assets/C-clef.png" alt="" /></span>
+                  <span class="launcher-action-button__label">打开维护工具</span>
+                </button>
+                <button type="button" data-launch-action="retrieval">
+                  <span class="launcher-action-button__icon"><img src="./assets/F-clef.png" alt="" /></span>
+                  <span class="launcher-action-button__label">打开版本检索工具</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="launcher-page" data-page="details" hidden>
+              <div class="launcher-detail-header">
+                <p class="launcher-card__eyebrow">Library Details</p>
+                <button type="button" class="launcher-text-button launcher-back-link" data-view-action="back">返回</button>
+              </div>
+              <h2 id="launcher-detail-title">当前活动库</h2>
+
+              <dl class="launcher-detail-grid" id="launcher-library-status">
+                <div>
+                  <dt>库名称</dt>
+                  <dd>正在读取</dd>
+                </div>
+              </dl>
+
+              <div class="launcher-detail-actions">
+                <button type="button" class="launcher-secondary-button" data-library-action="import">导入库</button>
+                <button type="button" class="launcher-secondary-button" data-library-action="export">导出库</button>
+                <button type="button" class="launcher-secondary-button" data-library-action="open-folder">打开库目录</button>
+              </div>
+            </section>
+          </div>
+
+          <p id="launcher-feedback" class="launcher-feedback">准备就绪。</p>
+        </section>
+      </main>
+    </div>
+    <script src="./launcher.js"></script>
+  </body>
+</html>

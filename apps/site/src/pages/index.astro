@@ -1,0 +1,73 @@
+---
+import DailyRecommendations from "@/components/DailyRecommendations.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildRecordingDisplayModel } from "@/lib/display";
+import { readGeneratedArticles, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { resolveSiteImageSrc } from "@/lib/site-assets";
+import { buildFeaturedArticles } from "@/lib/site-content";
+
+const [site, library, articles] = await Promise.all([
+  readGeneratedSite(),
+  readGeneratedLibrary(),
+  readGeneratedArticles(),
+]);
+
+const recommendationItems = library.recordings.map((recording) => {
+  const display = buildRecordingDisplayModel(recording, library);
+
+  return {
+    id: recording.id,
+    title: display.title,
+    subtitle: display.subtitle,
+    workPrimary: display.daily.workPrimary,
+    workSecondary: display.daily.workSecondary,
+    composerPrimary: display.daily.composerPrimary,
+    composerSecondary: display.daily.composerSecondary,
+    principalPrimary: display.daily.principalPrimary,
+    principalSecondary: display.daily.principalSecondary,
+    supportingPrimary: display.daily.supportingPrimary,
+    supportingSecondary: display.daily.supportingSecondary,
+    ensemblePrimary: display.daily.ensemblePrimary,
+    ensembleSecondary: display.daily.ensembleSecondary,
+    datePlacePrimary: display.daily.datePlacePrimary,
+    datePlaceSecondary: display.daily.datePlaceSecondary,
+    href: `/recordings/${recording.id}/`,
+    imageSrc: resolveSiteImageSrc(recording.images[0]?.src ?? ""),
+  };
+});
+
+const featuredArticles = buildFeaturedArticles(articles, 10);
+---
+
+<BaseLayout title={`${site.title} | 首页`} description={site.description}>
+  <div class="container home-shell">
+    <section class="home-intro">
+      <h1>{site.title}</h1>
+      <p>{site.subtitle}</p>
+      <p class="page-note">{site.heroIntro || site.description}</p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    {recommendationItems.length > 0 && <DailyRecommendations items={recommendationItems} />}
+
+    <section class="home-columns">
+      <div class="section-heading section-heading--centered">
+        <p class="section-heading__eyebrow">Featured Columns</p>
+        <h2>推荐专栏</h2>
+      </div>
+
+      <div class="line-entry-list">
+        {featuredArticles.map((item) => (
+          <article class="line-entry">
+            <div>
+              <h3><a href={item.href}>{item.title}</a></h3>
+              <p>{item.summary || "点击进入专栏正文。"}</p>
+            </div>
+            <span>{item.updatedAt}</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,88 @@
+{
+  "total": 2,
+  "groups": [
+    {
+      "composerId": "composer-罗伯特舒曼",
+      "composerName": "罗伯特·舒曼",
+      "workId": "work-罗伯特舒曼-钢琴协奏曲-a小调钢琴协奏曲",
+      "workTitle": "a小调钢琴协奏曲",
+      "itemCount": 2,
+      "entries": [
+        {
+          "entityId": "recording-a小调钢琴协奏曲-福斯特-1953",
+          "issueCode": "recording-missing-credit-role",
+          "composerId": "composer-罗伯特舒曼",
+          "composerName": "罗伯特·舒曼",
+          "workId": "work-罗伯特舒曼-钢琴协奏曲-a小调钢琴协奏曲",
+          "workTitle": "a小调钢琴协奏曲",
+          "recordingId": "recording-a小调钢琴协奏曲-福斯特-1953",
+          "recordingTitle": "福斯特 - 1953*",
+          "workTypeHint": "concerto",
+          "missingRoles": [
+            "orchestra_or_ensemble"
+          ],
+          "sourcePath": "作曲家/罗伯特·舒曼/钢琴协奏曲/a小调钢琴协奏曲/福斯特_1953.htm",
+          "details": [
+            "archive 中缺少可解析的关键署名：orchestra_or_ensemble"
+          ]
+        },
+        {
+          "entityId": "recording-a小调钢琴协奏曲-维尔萨拉泽-and-鲁丁",
+          "issueCode": "recording-missing-credit-role",
+          "composerId": "composer-罗伯特舒曼",
+          "composerName": "罗伯特·舒曼",
+          "workId": "work-罗伯特舒曼-钢琴协奏曲-a小调钢琴协奏曲",
+          "workTitle": "a小调钢琴协奏曲",
+          "recordingId": "recording-a小调钢琴协奏曲-维尔萨拉泽-and-鲁丁",
+          "recordingTitle": "亚历山大·鲁丁 - 维尔萨拉泽 - 莫斯科音乐学院大音乐厅",
+          "workTypeHint": "concerto",
+          "missingRoles": [
+            "orchestra_or_ensemble"
+          ],
+          "sourcePath": "作曲家/罗伯特·舒曼/钢琴协奏曲/a小调钢琴协奏曲/维尔萨拉泽&鲁丁.htm",
+          "details": [
+            "archive 中缺少可解析的关键署名：orchestra_or_ensemble"
+          ]
+        }
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "entityId": "recording-a小调钢琴协奏曲-福斯特-1953",
+      "issueCode": "recording-missing-credit-role",
+      "composerId": "composer-罗伯特舒曼",
+      "composerName": "罗伯特·舒曼",
+      "workId": "work-罗伯特舒曼-钢琴协奏曲-a小调钢琴协奏曲",
+      "workTitle": "a小调钢琴协奏曲",
+      "recordingId": "recording-a小调钢琴协奏曲-福斯特-1953",
+      "recordingTitle": "福斯特 - 1953*",
+      "workTypeHint": "concerto",
+      "missingRoles": [
+        "orchestra_or_ensemble"
+      ],
+      "sourcePath": "作曲家/罗伯特·舒曼/钢琴协奏曲/a小调钢琴协奏曲/福斯特_1953.htm",
+      "details": [
+        "archive 中缺少可解析的关键署名：orchestra_or_ensemble"
+      ]
+    },
+    {
+      "entityId": "recording-a小调钢琴协奏曲-维尔萨拉泽-and-鲁丁",
+      "issueCode": "recording-missing-credit-role",
+      "composerId": "composer-罗伯特舒曼",
+      "composerName": "罗伯特·舒曼",
+      "workId": "work-罗伯特舒曼-钢琴协奏曲-a小调钢琴协奏曲",
+      "workTitle": "a小调钢琴协奏曲",
+      "recordingId": "recording-a小调钢琴协奏曲-维尔萨拉泽-and-鲁丁",
+      "recordingTitle": "亚历山大·鲁丁 - 维尔萨拉泽 - 莫斯科音乐学院大音乐厅",
+      "workTypeHint": "concerto",
+      "missingRoles": [
+        "orchestra_or_ensemble"
+      ],
+      "sourcePath": "作曲家/罗伯特·舒曼/钢琴协奏曲/a小调钢琴协奏曲/维尔萨拉泽&鲁丁.htm",
+      "details": [
+        "archive 中缺少可解析的关键署名：orchestra_or_ensemble"
+      ]
+    }
+  ]
+}

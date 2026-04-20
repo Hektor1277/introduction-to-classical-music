@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recording Retrieval Service</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Standalone Surface</p>
+          <h1>Recording Retrieval Service</h1>
+          <p class="summary">根据现有条目信息执行版本检索、补全信息，并在返回前完成可视化确认。</p>
+        </div>
+        <div class="hero-actions">
+          <button type="button" id="open-high-quality" class="secondary">打开高质量来源文档</button>
+          <button type="button" id="open-streaming" class="secondary">打开资源平台文档</button>
+          <button type="button" id="open-llm-config" class="secondary">打开 LLM 配置</button>
+          <button type="button" id="open-orchestra-aliases" class="secondary">打开乐团缩写文档</button>
+          <button type="button" id="open-person-aliases" class="secondary">打开人物映射文档</button>
+        </div>
+      </header>
+
+      <section class="layout">
+        <section class="panel workspace-panel">
+          <div class="panel-header">
+            <h2>工作区</h2>
+            <p>输入关键字段、原始文本和作品类别，再执行文本分析、刷新条目或开始搜索。</p>
+          </div>
+
+          <form id="request-form" class="workspace-form">
+            <label class="wide">
+              <span>原始文本</span>
+              <textarea
+                name="rawText"
+                rows="6"
+                placeholder="建议格式：作曲家 | 作品 | 指挥 | 乐团 | 年份；缺失项写 -"
+              ></textarea>
+            </label>
+
+            <div class="field-grid">
+              <label>
+                <span>版本标题</span>
+                <input name="title" placeholder="例如：Kempe 1964 LSO" />
+              </label>
+              <label>
+                <span>作品类别</span>
+                <select name="workTypeHint" id="work-type">
+                  <option value="orchestral" selected>orchestral / 管弦乐</option>
+                  <option value="concerto">concerto / 协奏曲</option>
+                  <option value="opera_vocal">opera_vocal / 歌剧与声乐</option>
+                  <option value="chamber_solo">chamber_solo / 室内乐与独奏</option>
+                  <option value="unknown">unknown / 未知</option>
+                </select>
+              </label>
+
+              <label>
+                <span id="primary-person-label">人物 / 指挥</span>
+                <input id="primary-person-input" name="primaryPerson" placeholder="例如：卡拉扬" />
+              </label>
+              <label>
+                <span id="primary-person-latin-label">人物 / 指挥 Latin</span>
+                <input id="primary-person-latin-input" name="primaryPersonLatin" placeholder="例如：Herbert von Karajan" />
+              </label>
+
+              <label id="secondary-person-field">
+                <span id="secondary-person-label">第二关键信息</span>
+                <input id="secondary-person-input" name="secondaryPerson" placeholder="例如：安妮·费舍尔" />
+              </label>
+              <label id="secondary-person-latin-field">
+                <span id="secondary-person-latin-label">第二关键信息 Latin</span>
+                <input id="secondary-person-latin-input" name="secondaryPersonLatin" placeholder="例如：Annie Fischer" />
+              </label>
+
+              <label>
+                <span id="group-name-label">团体 / 乐团</span>
+                <input id="group-name-input" name="groupName" placeholder="例如：维也纳爱乐乐团" />
+              </label>
+              <label>
+                <span id="group-name-latin-label">团体 / 乐团 Latin</span>
+                <input id="group-name-latin-input" name="groupNameLatin" placeholder="例如：Wiener Philharmoniker" />
+              </label>
+
+              <label>
+                <span>作曲家</span>
+                <input name="composerName" placeholder="例如：柴可夫斯基" />
+              </label>
+              <label>
+                <span>作曲家 Latin</span>
+                <input name="composerNameLatin" placeholder="例如：Pyotr Ilyich Tchaikovsky" />
+              </label>
+
+              <label>
+                <span>作品标题</span>
+                <input name="workTitle" placeholder="例如：第五交响曲" />
+              </label>
+              <label>
+                <span>作品 Latin</span>
+                <input name="workTitleLatin" placeholder="例如：Symphony No. 5 in E Minor" />
+              </label>
+
+              <label>
+                <span>Catalogue / 作品号</span>
+                <input name="catalogue" placeholder="例如：Op.64" />
+              </label>
+              <label>
+                <span>演出时间 / 年份</span>
+                <input name="performanceDateText" placeholder="例如：1964" />
+              </label>
+
+              <label class="wide">
+                <span>已有链接</span>
+                <input name="existingLinks" placeholder="可输入多个链接，用空格分隔" />
+              </label>
+            </div>
+
+            <div class="workspace-actions">
+              <button type="button" id="analyze-button">文本分析</button>
+              <button type="button" id="refresh-button" class="secondary">刷新条目</button>
+              <button type="button" id="search-button">开始搜索</button>
+            </div>
+
+            <div class="profile-hints">
+              <p id="high-quality-path">高质量来源文档：加载中...</p>
+              <p id="streaming-path">资源平台文档：加载中...</p>
+              <p id="llm-config-path">LLM 配置：加载中...</p>
+              <p id="orchestra-alias-path">乐团缩写文档：加载中...</p>
+              <p id="person-alias-path">人物映射文档：加载中...</p>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel display-panel">
+          <div class="panel-header">
+            <h2>展示区</h2>
+            <p>展示当前条目预览或检索后的候选版本。若存在多个匹配条目，可在顶部切换查看。</p>
+          </div>
+
+          <div id="status-bar" class="status-bar">状态：等待操作</div>
+          <div id="variant-tabs" class="variant-tabs"></div>
+
+          <article id="entry-card" class="entry-card empty">
+            <div class="entry-headline">
+              <div>
+                <p class="entry-kicker">版本条目</p>
+                <h3 id="entry-title">尚未生成条目</h3>
+                <p id="entry-subtitle" class="entry-subtitle">在左侧工作区填写信息后，点击“刷新条目”或“开始搜索”。</p>
+              </div>
+              <span id="entry-badge" class="entry-badge">draft</span>
+            </div>
+
+            <div class="entry-layout">
+              <section id="cover-frame" class="cover-frame empty">
+                <div class="cover-placeholder">
+                  <span>封面</span>
+                  <small>当前没有可展示的图片</small>
+                </div>
+                <img id="cover-image" alt="版本封面" hidden />
+                <p id="cover-caption" class="cover-caption"></p>
+              </section>
+
+              <section class="entry-details">
+                <div class="entry-grid">
+                  <div class="entry-field"><span>作曲家</span><strong id="field-composerName">—</strong></div>
+                  <div class="entry-field"><span>作品</span><strong id="field-workTitle">—</strong></div>
+                  <div class="entry-field"><span id="display-primary-person-label">人物 / 指挥</span><strong id="field-primaryPerson">—</strong></div>
+                  <div class="entry-field"><span id="display-primary-person-latin-label">人物 / 指挥 Latin</span><strong id="field-primaryPersonLatin">—</strong></div>
+                  <div class="entry-field"><span id="display-secondary-person-label">第二关键信息</span><strong id="field-secondaryPerson">—</strong></div>
+                  <div class="entry-field"><span id="display-secondary-person-latin-label">第二关键信息 Latin</span><strong id="field-secondaryPersonLatin">—</strong></div>
+                  <div class="entry-field"><span id="display-group-name-label">团体 / 乐团</span><strong id="field-groupName">—</strong></div>
+                  <div class="entry-field"><span id="display-group-name-latin-label">团体 / 乐团 Latin</span><strong id="field-groupNameLatin">—</strong></div>
+                  <div class="entry-field"><span>作品类别</span><strong id="field-workTypeHint">—</strong></div>
+                  <div class="entry-field"><span>演出时间</span><strong id="field-performanceDateText">—</strong></div>
+                  <div class="entry-field"><span>作曲家 Latin</span><strong id="field-composerNameLatin">—</strong></div>
+                  <div class="entry-field"><span>作品 Latin</span><strong id="field-workTitleLatin">—</strong></div>
+                  <div class="entry-field"><span>地点</span><strong id="field-venueText">—</strong></div>
+                  <div class="entry-field"><span>专辑名</span><strong id="field-albumTitle">—</strong></div>
+                  <div class="entry-field"><span>厂牌</span><strong id="field-label">—</strong></div>
+                  <div class="entry-field"><span>发行时间</span><strong id="field-releaseDate">—</strong></div>
+                  <div class="entry-field wide"><span>备注</span><strong id="field-notes">—</strong></div>
+                </div>
+
+                <section class="entry-section">
+                  <h4>资源链接</h4>
+                  <ul id="link-list" class="chip-list empty-list">
+                    <li>暂无链接</li>
+                  </ul>
+                </section>
+
+                <section class="entry-section">
+                  <h4>检索提示</h4>
+                  <ul id="warning-list" class="plain-list empty-list">
+                    <li>暂无提示</li>
+                  </ul>
+                </section>
+              </section>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>

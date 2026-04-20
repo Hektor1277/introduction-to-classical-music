@@ -1,0 +1,79 @@
+---
+import EntityInfoPanel from "@/components/EntityInfoPanel.astro";
+import ExpandableSummary from "@/components/ExpandableSummary.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getDisplayData, getWebsiteDisplay } from "@/lib/display";
+import { loadPersonLinks, readGeneratedArticles, readGeneratedIndexes, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+
+export async function getStaticPaths() {
+  const resolveCanonicalId = (personId: string, personLinks: { canonicalPersonLinks: Record<string, string> }) => {
+    const seen = new Set<string>();
+    let current = personId;
+    while (personLinks.canonicalPersonLinks[current] && !seen.has(current)) {
+      seen.add(current);
+      current = personLinks.canonicalPersonLinks[current];
+    }
+    return current;
+  };
+
+  const [library, personLinks] = await Promise.all([readGeneratedLibrary(), loadPersonLinks()]);
+  return library.people
+    .filter((person) => person.roles.includes("conductor") && resolveCanonicalId(person.id, personLinks) === person.id)
+    .map((person) => ({
+      params: {
+        slug: person.slug,
+      },
+      props: {
+        person,
+      },
+    }));
+}
+
+const { person } = Astro.props;
+const [site, indexes, articles] = await Promise.all([readGeneratedSite(), readGeneratedIndexes(), readGeneratedArticles()]);
+const entry = indexes.conductorIndex[person.id];
+const display = getDisplayData(person);
+const headingName = getWebsiteDisplay(person).heading;
+const linkedArticle = articles.find((article) => article.id === person.infoPanel?.articleId);
+---
+
+<BaseLayout title={`${site.title} | ${headingName}`} description={`${headingName} 的相关推荐版本索引。`}>
+  <div class="container page-section">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Conductor</p>
+      <h1>{headingName}</h1>
+    </div>
+    {display.primary && display.primary !== headingName && <p class="page-lead">{display.primary}</p>}
+    {display.latin && <p class="page-note">{display.latin}</p>}
+    {person.summary && <ExpandableSummary text={person.summary} className="body-copy" />}
+
+    <EntityInfoPanel infoPanel={person.infoPanel} article={linkedArticle} />
+
+    <div class="section-divider"></div>
+
+    {entry?.groups?.length ? (
+      <div class="section-stack section-stack--tight">
+        {entry.groups.map((group) => (
+          <section class="group-listing">
+            <div class="group-listing__header">
+              <h2>{group.composerName}</h2>
+            </div>
+
+            {group.works.map((work) => (
+              <article class="group-listing__work">
+                <h3><a href={work.href}>{work.title}</a></h3>
+                <ul class="linked-list">
+                  {work.recordings.map((recording) => (
+                    <li><a href={recording.href}>{recording.title}</a></li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </section>
+        ))}
+      </div>
+    ) : (
+      <p class="page-note">该指挥暂未关联版本条目。</p>
+    )}
+  </div>
+</BaseLayout>

@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "youtube": {
+    "enabled": true,
+    "apiKey": "YOUR_YOUTUBE_DATA_API_KEY",
+    "regionCode": "US",
+    "maxResults": 8
+  },
+  "appleMusic": {
+    "enabled": true,
+    "developerToken": "YOUR_APPLE_MUSIC_DEVELOPER_TOKEN",
+    "storefront": "us",
+    "useItunesFallback": true
+  },
+  "bilibili": {
+    "enabled": true,
+    "cookie": "SESSDATA=...; buvid3=...; b_nut=...",
+    "userAgent": "Mozilla/5.0",
+    "referer": "https://www.bilibili.com",
+    "storageStatePath": "config/bilibili-storage-state.json"
+  }
+}

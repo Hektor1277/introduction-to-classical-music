@@ -1,0 +1,190 @@
+---
+import EntityInfoPanel from "@/components/EntityInfoPanel.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildRecordingDisplayModel, getDisplayData, getWebsiteDisplay } from "@/lib/display";
+import { readGeneratedArticles, readGeneratedIndexes, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { filterRenderableResourceLinks, getResourceLinkPresentation } from "@/lib/resource-links";
+import { filterRenderableRecordingImages } from "@/lib/site-assets";
+import type { Credit, PersonRole } from "@/lib/schema";
+
+export async function getStaticPaths() {
+  const library = await readGeneratedLibrary();
+  return library.recordings.map((recording) => ({
+    params: {
+      id: recording.id,
+    },
+    props: {
+      recording,
+    },
+  }));
+}
+
+const { recording } = Astro.props;
+const [site, library, indexes, articles] = await Promise.all([
+  readGeneratedSite(),
+  readGeneratedLibrary(),
+  readGeneratedIndexes(),
+  readGeneratedArticles(),
+]);
+const work = library.works.find((item) => item.id === recording.workId);
+const composer = work ? library.composers.find((item) => item.id === work.composerId) : undefined;
+const personById = new Map(library.people.map((person) => [person.id, person]));
+const displayModel = buildRecordingDisplayModel(recording, library);
+const title = displayModel.title;
+const galleryImages = filterRenderableRecordingImages(recording.images);
+const linkedArticle = articles.find((article) => article.id === recording.infoPanel?.articleId);
+const groupedCredits = recording.credits.reduce<Partial<Record<PersonRole, Credit[]>>>((accumulator, credit) => {
+  const bucket = accumulator[credit.role] ?? [];
+  bucket.push(credit);
+  accumulator[credit.role] = bucket;
+  return accumulator;
+}, {});
+const creditLabels: Record<PersonRole, string> = {
+  composer: "作曲",
+  conductor: "指挥",
+  orchestra: "乐团",
+  soloist: "独奏",
+  singer: "歌手",
+  ensemble: "组合",
+  chorus: "合唱",
+  instrumentalist: "器乐",
+  other: "其他",
+};
+const creditEntries = Object.entries(groupedCredits) as Array<[PersonRole, Credit[]]>;
+const presentedLinks = filterRenderableResourceLinks(recording.links).map(getResourceLinkPresentation);
+
+const resolveCreditPerson = (credit: Credit) => {
+  const canonicalId = credit.personId ? indexes.canonicalPeople[credit.personId] || credit.personId : "";
+  return canonicalId ? personById.get(canonicalId) : undefined;
+};
+
+const renderCreditLabel = (credit: Credit) => {
+  const person = resolveCreditPerson(credit);
+  if (!person) {
+    return credit.displayName;
+  }
+  if (credit.role === "orchestra" || credit.role === "ensemble" || credit.role === "chorus") {
+    return getWebsiteDisplay(person).heading;
+  }
+  return getDisplayData(person).primary || getWebsiteDisplay(person).heading;
+};
+---
+
+<BaseLayout title={`${site.title} | ${title}`} description={`${title} 的演出信息与外部资源链接。`}>
+  <div class="container page-section recording-page">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Recording</p>
+      <h1>{title}</h1>
+      {displayModel.subtitle && displayModel.subtitle !== title && <p class="page-lead">{displayModel.subtitle}</p>}
+      <p class="page-note">
+        <a href={work ? `/works/${work.id}/` : "#"}>{work?.title ?? "未知作品"}</a>
+        {composer ? ` / ${getWebsiteDisplay(composer).heading}` : ""}
+      </p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <section class="recording-page__top">
+      <div class="recording-page__gallery">
+        {galleryImages.length > 0 ? (
+          galleryImages.map((image) => (
+            <img src={image.src} alt={image.alt || title} loading="lazy" />
+          ))
+        ) : (
+          <div class="recording-page__placeholder">暂无图片</div>
+        )}
+      </div>
+
+      <div class="recording-page__details">
+        <dl class="metadata-list">
+          {creditEntries.map(([role, credits]) => (
+            <>
+              <dt>{creditLabels[role] ?? role}</dt>
+              <dd>
+                {credits.map((credit) => {
+                  const person = resolveCreditPerson(credit);
+                  const href = person ? indexes.personIndex[person.id]?.href : undefined;
+                  const label = renderCreditLabel(credit);
+                  return href ? <a href={href}>{label}</a> : <span>{label}</span>;
+                })}
+              </dd>
+            </>
+          ))}
+
+          {recording.performanceDateText && (
+            <>
+              <dt>时间</dt>
+              <dd>{recording.performanceDateText}</dd>
+            </>
+          )}
+          {recording.venueText && (
+            <>
+              <dt>地点</dt>
+              <dd>{recording.venueText}</dd>
+            </>
+          )}
+          {recording.albumTitle && (
+            <>
+              <dt>专辑</dt>
+              <dd>{recording.albumTitle}</dd>
+            </>
+          )}
+          {recording.label && (
+            <>
+              <dt>发行商</dt>
+              <dd>{recording.label}</dd>
+            </>
+          )}
+          {recording.releaseDate && (
+            <>
+              <dt>发行日期</dt>
+              <dd>{recording.releaseDate}</dd>
+            </>
+          )}
+        </dl>
+      </div>
+    </section>
+
+    {recording.notes && (
+      <>
+        <div class="section-divider section-divider--short"></div>
+        <section>
+          <div class="section-heading section-heading--subsection">
+            <p class="section-heading__eyebrow">Notes</p>
+            <h2>附注</h2>
+          </div>
+          <p class="body-copy">{recording.notes}</p>
+        </section>
+      </>
+    )}
+
+    <EntityInfoPanel infoPanel={recording.infoPanel} article={linkedArticle} />
+
+    {presentedLinks.length > 0 && (
+      <>
+        <div class="section-divider section-divider--short"></div>
+        <section>
+          <div class="section-heading section-heading--subsection">
+            <p class="section-heading__eyebrow">Resource Links</p>
+            <h2>外部资源</h2>
+          </div>
+          <ul class="resource-list resource-list--buttons">
+            {presentedLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target={link.linkType === "local" ? undefined : "_blank"}
+                  rel={link.linkType === "local" ? undefined : "noreferrer"}
+                  data-local-resource-link={link.linkType === "local" ? "true" : undefined}
+                  title={link.metadataTitle || link.localPath || undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </>
+    )}
+  </div>
+</BaseLayout>

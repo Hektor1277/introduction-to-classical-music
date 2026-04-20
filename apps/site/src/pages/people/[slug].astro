@@ -1,0 +1,78 @@
+---
+import EntityInfoPanel from "@/components/EntityInfoPanel.astro";
+import ExpandableSummary from "@/components/ExpandableSummary.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildRecordingDisplayTitle, getDisplayData, getWebsiteDisplay } from "@/lib/display";
+import { loadPersonLinks, readGeneratedArticles, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+
+export async function getStaticPaths() {
+  const resolveCanonicalId = (personId: string, personLinks: { canonicalPersonLinks: Record<string, string> }) => {
+    const seen = new Set<string>();
+    let current = personId;
+    while (personLinks.canonicalPersonLinks[current] && !seen.has(current)) {
+      seen.add(current);
+      current = personLinks.canonicalPersonLinks[current];
+    }
+    return current;
+  };
+
+  const [library, personLinks] = await Promise.all([readGeneratedLibrary(), loadPersonLinks()]);
+  return library.people
+    .filter((person) => !person.roles.includes("conductor") && !person.roles.includes("orchestra") && resolveCanonicalId(person.id, personLinks) === person.id)
+    .map((person) => ({
+      params: {
+        slug: person.slug,
+      },
+      props: {
+        person,
+      },
+    }));
+}
+
+const { person } = Astro.props;
+const [site, library, articles] = await Promise.all([readGeneratedSite(), readGeneratedLibrary(), readGeneratedArticles()]);
+const workById = new Map(library.works.map((work) => [work.id, work]));
+const composerById = new Map(library.composers.map((composer) => [composer.id, composer]));
+const display = getDisplayData(person);
+const headingName = getWebsiteDisplay(person).heading;
+const linkedArticle = articles.find((article) => article.id === person.infoPanel?.articleId);
+
+const appearances = library.recordings
+  .filter((recording) => recording.credits.some((credit) => credit.personId === person.id))
+  .map((recording) => {
+    const work = workById.get(recording.workId);
+    const composer = work ? composerById.get(work.composerId) : undefined;
+    return {
+      recording,
+      work,
+      composer,
+      recordingTitle: buildRecordingDisplayTitle(recording, library),
+    };
+  });
+---
+
+<BaseLayout title={`${site.title} | ${headingName}`} description={`${headingName} 的相关版本与出现记录。`}>
+  <div class="container page-section">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Performer</p>
+      <h1>{headingName}</h1>
+    </div>
+    {display.primary && display.primary !== headingName && <p class="page-lead">{display.primary}</p>}
+    {display.latin && <p class="page-note">{display.latin}</p>}
+    <p class="page-note">角色：{person.roles.join(" / ")}</p>
+    {person.summary && <ExpandableSummary text={person.summary} className="body-copy" />}
+
+    <EntityInfoPanel infoPanel={person.infoPanel} article={linkedArticle} />
+
+    <div class="section-divider"></div>
+
+    <section class="section-stack section-stack--tight">
+      {appearances.length ? appearances.map(({ recording, work, composer, recordingTitle }) => (
+        <article class="line-entry">
+          <h2><a href={`/recordings/${recording.id}/`}>{recordingTitle}</a></h2>
+          <p class="list-card__subtitle">{composer ? getWebsiteDisplay(composer).heading : "未知作曲家"} / {work?.title ?? "未知作品"}</p>
+        </article>
+      )) : <p class="page-note">该人物暂未关联版本条目。</p>}
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,13 @@
+---
+import SearchPanel from "@/components/SearchPanel.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { readGeneratedIndexes, readGeneratedSite } from "@/lib/library-store";
+
+const [site, indexes] = await Promise.all([readGeneratedSite(), readGeneratedIndexes()]);
+---
+
+<BaseLayout title={`${site.title} | 搜索`} description="搜索作曲家、指挥、乐团、类型与作品索引。">
+  <div class="container page-section page-section--plain">
+    <SearchPanel items={indexes.searchIndex} intro={site.searchIntro} />
+  </div>
+</BaseLayout>

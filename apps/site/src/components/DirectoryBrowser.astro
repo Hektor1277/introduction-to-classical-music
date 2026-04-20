@@ -1,0 +1,149 @@
+---
+import { buildDirectorySections, createDirectoryDisplayEntry, type DirectoryEntry } from "@/lib/directory";
+import { resolveSiteImageSrc } from "@/lib/site-assets";
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  entries: DirectoryEntry[];
+  emptyMessage?: string;
+}
+
+const { eyebrow, title, intro, entries, emptyMessage = "暂无条目。" } = Astro.props;
+
+const modes = [
+  { id: "surname", label: "按姓氏字母" },
+  { id: "birth", label: "按出生年份" },
+  { id: "country", label: "按国家" },
+] as const;
+
+const sectionSets = {
+  surname: buildDirectorySections(entries, "surname"),
+  birth: buildDirectorySections(entries, "birth"),
+  country: buildDirectorySections(entries, "country"),
+};
+
+function emphasize(value: string, highlight: string) {
+  if (!value || !highlight || !value.includes(highlight)) {
+    return value;
+  }
+
+  return value.replace(highlight, `<strong>${highlight}</strong>`);
+}
+---
+
+<section class="directory-browser" data-directory-browser>
+  <div class="directory-browser__header section-heading section-heading--page-intro">
+    <p class="section-heading__eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="page-lead">{intro}</p>
+  </div>
+
+  {entries.length ? (
+    <>
+      <div class="directory-browser__toolbar">
+        <div class="directory-sort" role="tablist" aria-label="排序方式">
+          {modes.map((mode, index) => (
+            <button
+              type="button"
+              class:list={{ "is-active": index === 0 }}
+              data-directory-mode={mode.id}
+              role="tab"
+              aria-selected={index === 0 ? "true" : "false"}
+            >
+              {mode.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {modes.map((mode, index) => (
+        <div class:list={{ "directory-mode": true, "is-active": index === 0 }} data-directory-panel={mode.id}>
+          <div class="directory-layout">
+            <div class="directory-sections">
+              {sectionSets[mode.id].sections.map((section) => (
+                <section class="directory-section" data-directory-section={section.id}>
+                  <div class="directory-section__header">
+                    <div class="section-divider section-divider--short"></div>
+                    <h2 id={`${mode.id}-${section.id}`}>{section.title}</h2>
+                    <div class="section-divider section-divider--short"></div>
+                  </div>
+
+                  <div class="directory-list">
+                    {section.items.map((item) => {
+                      const display = createDirectoryDisplayEntry(item);
+                      const avatarSrc = resolveSiteImageSrc(display.avatarSrc || "");
+                      return (
+                        <a class="directory-row" href={display.href}>
+                          <div class="directory-row__media">
+                            {avatarSrc ? (
+                              <img class="directory-row__avatar" src={avatarSrc} alt={display.shortName} loading="lazy" />
+                            ) : (
+                              <div class="directory-row__avatar directory-row__avatar--fallback">{display.avatarLabel}</div>
+                            )}
+                          </div>
+
+                            <div class="directory-row__identity">
+                            <div class="directory-row__names">
+                              <h3>{display.shortName}</h3>
+                              {display.fullName && display.fullName !== display.shortName && (
+                                <p set:html={emphasize(display.fullName, display.fullNameHighlight)}></p>
+                              )}
+                              {display.nameLatin && <p set:html={emphasize(display.nameLatin, display.nameLatinHighlight)}></p>}
+                              {display.originalName && (
+                                <p set:html={emphasize(display.originalName, display.originalNameHighlight)}></p>
+                              )}
+                              <p class="directory-row__facts">
+                                {display.countryLabel}
+                                {display.birthYear ? ` · ${display.birthYear}${display.deathYear ? `–${display.deathYear}` : "–"}` : ""}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div class="directory-row__content">
+                            <p class="directory-row__summary">{display.summaryExcerpt || "暂无简介。"}</p>
+                            <p class="directory-row__works-label">{display.representativeWorksLabel || "暂无代表作品摘要。"}</p>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            <aside class="directory-rail" aria-label="快速定位">
+              {sectionSets[mode.id].rail.map((item) => (
+                <a href={`#${mode.id}-${item.targetId}`}>{item.label}</a>
+              ))}
+            </aside>
+          </div>
+        </div>
+      ))}
+    </>
+  ) : (
+    <p class="page-note">{emptyMessage}</p>
+  )}
+</section>
+
+<script is:inline>
+  const directoryBrowsers = document.querySelectorAll("[data-directory-browser]");
+
+  directoryBrowsers.forEach((browser) => {
+    const buttons = [...browser.querySelectorAll("[data-directory-mode]")];
+    const panels = [...browser.querySelectorAll("[data-directory-panel]")];
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const mode = button.getAttribute("data-directory-mode");
+        buttons.forEach((item) => {
+          const isActive = item === button;
+          item.classList.toggle("is-active", isActive);
+          item.setAttribute("aria-selected", isActive ? "true" : "false");
+        });
+        panels.forEach((panel) => panel.classList.toggle("is-active", panel.getAttribute("data-directory-panel") === mode));
+      });
+    });
+  });
+</script>

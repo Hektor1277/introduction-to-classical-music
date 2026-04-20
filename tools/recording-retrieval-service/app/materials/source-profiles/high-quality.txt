@@ -1,0 +1,34 @@
+# high-quality 来源总表
+# 用法：
+# 1. 使用 #section-name 开始一个分组，例如 #global、#orchestral、#piano。
+# 2. 一行一个 hostname 或完整 URL。
+# 3. 同一站点可以出现在多个分组，但实际加载时只保留第一次出现的位置。
+# 4. 加载顺序固定为：global -> 曲目类型 -> 标签类型。
+# 5. 建议只填写“信息密度高、误报少、页面结构稳定”的来源站点。
+# 6. 如果某类曲目有更强的专门来源，就把它放到对应分组；越靠上优先级越高。
+# 7. 如未来需要加入中文高质量站点，也可以像资源平台文档一样使用 [zh] 标记。
+
+#global
+https://discography.goclassic.co.kr
+https://www.discogs.com
+https://www.prestomusic.com
+https://www.arkivmusic.com
+https://www.hyperion-records.co.uk
+
+#orchestral
+https://www.abruckner.com
+
+#concerto
+
+#opera_vocal
+https://wagnerdisco.net
+https://www.operadis-opera-discography.org.uk
+
+#chamber_solo
+
+#piano
+https://pianistdiscography.com/discography/discography.php
+https://classical-pianists.net/
+https://www.pianostreet.com
+
+#violin

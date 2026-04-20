@@ -1,0 +1,40 @@
+---
+import type { Article } from "@/lib/articles";
+import { filterRenderableResourceLinks, getResourceLinkPresentation } from "@/lib/resource-links";
+import type { InfoPanel } from "@/lib/schema";
+
+interface Props {
+  infoPanel?: InfoPanel;
+  article?: Article;
+}
+
+const { infoPanel, article } = Astro.props;
+const collectionLinks = filterRenderableResourceLinks(infoPanel?.collectionLinks || []).map(getResourceLinkPresentation);
+const hasContent = Boolean(infoPanel?.text || collectionLinks.length || article);
+---
+
+{hasContent && (
+  <section class="entity-info-panel">
+    <h2 class="entity-info-panel__title">导览</h2>
+    {infoPanel?.text && <p class="body-copy">{infoPanel.text}</p>}
+    <div class="entity-info-panel__actions">
+      {article && (
+        <a class="entity-info-panel__link" href={`/columns/${article.slug}/`}>
+          专栏：{article.title}
+        </a>
+      )}
+      {collectionLinks.map((link, index) => (
+        <a
+          class="entity-info-panel__link"
+          href={link.href}
+          target={link.linkType === "local" ? undefined : "_blank"}
+          rel={link.linkType === "local" ? undefined : "noreferrer"}
+          data-local-resource-link={link.linkType === "local" ? "true" : undefined}
+          title={link.metadataTitle || link.localPath || undefined}
+        >
+          {(link.metadataTitle || link.label || "链接") + (collectionLinks.length > 1 ? ` ${index + 1}` : "")}
+        </a>
+      ))}
+    </div>
+  </section>
+)}

@@ -1,0 +1,43 @@
+# 人物姓名映射文档
+# 用法：
+# 1. 使用 #section-name 定义角色分组，例如 #global、#conductor、#soloist、#composer、#pianist。
+# 2. 每行一个映射组，使用 = 连接不同语言、不同译名、不同写法。
+# 3. 建议按“中文常用名 = 中文别名 = Latin/原文短名 = Latin/原文全名”填写。
+# 4. 系统会双向读取：输入中文可展开 Latin/原文，输入 Latin/原文也可回查中文或缩写。
+# 5. #global 中的映射适用于所有角色；角色分组中的映射会在对应角色里优先使用。
+
+#global
+Ferencsik Janos = Janos Ferencsik
+# 例：西贝柳斯 = 西贝留士 = Sibelius = Jean Sibelius
+
+#conductor
+Kletzki = Paul Kletzki
+富特文格勒 = Wilhelm Furtwangler = Wilhelm Furtwängler
+约胡姆 = Eugen Jochum
+费伦茨·弗里乔伊 = 弗里乔伊 = Ferenc Fricsay
+埃利亚斯伯格 = Carl Eliasberg
+# 例：蒙都 = 蒙特 = Monteux = Pierre Monteux
+
+#soloist
+安妮·费舍尔 = Annie Fischer
+# 例：安妮·费舍尔 = Annie Fischer
+
+山根弥生子 = 山根美代子 = Miyoko Yamane
+亚历山大·莫吉列夫斯基 = Alexandre Moguilewsky = Alexander Mogilevsky = Alexander Yakovlevich Mogilevsky
+列奥尼德·克鲁策 = Leonid Kreutzer
+
+#composer
+舒曼 = Robert Schumann
+# 例：舒曼 = Robert Schumann
+
+#pianist
+
+#violinist
+
+#soprano
+
+#tenor
+
+#baritone
+
+#ensemble

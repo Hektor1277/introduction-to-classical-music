@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./output/runtime",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "noEmit": false,
+    "declaration": false,
+    "sourceMap": false,
+    "allowImportingTsExtensions": false,
+    "paths": {}
+  },
+  "include": [
+    "scripts/**/*.ts",
+    "apps/desktop/**/*.ts",
+    "apps/owner/server/**/*.ts",
+    "packages/**/*.ts"
+  ],
+  "exclude": [
+    "tests",
+    "apps/site/src/pages",
+    "apps/site/src/components",
+    "apps/site/src/layouts"
+  ]
+}

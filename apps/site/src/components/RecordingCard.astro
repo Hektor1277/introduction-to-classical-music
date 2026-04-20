@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  workTitle: string;
+  composerName: string;
+  href: string;
+  imageSrc?: string;
+  meta?: string;
+}
+
+const { title, workTitle, composerName, href, imageSrc = "", meta = "" } = Astro.props;
+---
+
+<article class="recording-card">
+  {imageSrc ? <img class="recording-card__image" src={imageSrc} alt={title} loading="lazy" /> : <div class="recording-card__image recording-card__image--empty">No Image</div>}
+  <div class="recording-card__body">
+    <p class="recording-card__meta">{composerName} / {workTitle}</p>
+    <h3 class="recording-card__title"><a href={href}>{title}</a></h3>
+    {meta && <p class="recording-card__detail">{meta}</p>}
+  </div>
+</article>

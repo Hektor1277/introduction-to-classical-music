@@ -1,0 +1,28 @@
+批量导入模板
+
+使用前提
+- 先在 owner 中手动建立作曲家和作品
+- 在批量导入顶部先选择作曲家、作品、版本模板
+
+通用约束
+- 每行一个版本
+- 使用 | 分隔字段
+- 缺失值写 -
+- 多个链接使用英文逗号分隔
+
+orchestral / 管弦乐
+指挥 | 乐团 | 年份 | 链接列表
+Kleiber | Wiener Philharmoniker | 1975 | -
+Karajan | Berliner Philharmoniker | 1963 | https://example.com/a, https://example.com/b
+
+concerto / 协奏曲
+独奏者 | 指挥 | 乐团 | 年份 | 链接列表
+Pollini | Kleiber | Wiener Philharmoniker | 1975 | -
+
+opera_vocal / 歌剧与声乐
+指挥 | 主演/卡司 | 乐团/合唱 | 年份 | 链接列表
+Karajan | Callas / Gobbi | La Scala Orchestra | 1955 | -
+
+chamber_solo / 室内乐与独奏
+主奏/组合 | 协作者 | 年份 | 链接列表
+Richter | - | 1960 | -

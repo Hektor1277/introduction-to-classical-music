@@ -1,0 +1,120 @@
+# 乐团名称对照表
+# 用法：
+# 1. 每行一个映射组，使用 = 连接缩写、中文译名、原文主名、原文别名等。
+# 2. 系统会双向读取：输入缩写、中文译名、原文别名，都可以回查规范名称。
+# 3. 推荐顺序：缩写 = 中文常用名 = 中文别名 = Latin/原文主名 = Latin/原文别名。
+
+RCO = 阿姆斯特丹皇家音乐厅管弦乐团 = 阿姆斯特丹管弦乐团 = 荷兰皇家音乐厅管弦乐团 = 皇家音乐厅管弦乐团 = Royal Concertgebouw Orchestra = Concertgebouworkest = The Royal Concertgebouw Orchestra
+PO = 爱乐乐团 = 新爱乐乐团 = Philharmonia Orchestra = Neo Philharmonia Orchestra
+巴伐利亚广播合唱团 = Bavarian Radio Chorus = BR Choir = BR-Chor
+BRSO = 巴伐利亚广播交响乐团 = 巴伐利亚广播管弦乐团 = Bavarian Radio Symphony Orchestra = Symphonie-Orchester des Bayerischen Rundfunks
+OP = 巴黎管弦乐团 = Orchestre de Paris = ??????
+OSCC = 巴黎音乐学院音乐会协会乐团 = Orchestre de la Société des Concerts du Conservatoire = ????????????? = Orchestre de la Soci?t? des Concerts du Conservatoire
+巴塞罗那交响乐团 = Orquesta Sinfónica de Barcelona = Barcelona Symphony Orchestra
+BP = BPO = 柏林爱乐乐团 = 柏林爱乐 = 柏林爱乐管弦乐团 = 柏林爱乐交响乐团 = Berliner Philharmoniker = Berlin Philharmonic = Berlin Philharmonic Orchestra = BPhil = Symphony Orchestra Berlin
+柏林广播合唱团 = Chorus of Radio Berlin = ???????
+RSB = 柏林广播交响乐团 = 柏林广播乐团 = Rundfunk-Sinfonieorchester Berlin = Berlin Radio Symphony Orchestra
+KOB = 柏林音乐厅管弦乐团 = 柏林音乐厅交响乐团 = 柏林音乐厅乐团 = Konzerthausorchester Berlin
+NEO = 北德广播交响乐团 = 汉堡NDR交响乐团 = NDR交响乐团 = NDR Elbphilharmonie Orchestra
+BPSO = 不来梅爱乐乐团 = 不来梅国家爱乐乐团 = 不来梅州立爱乐乐团 = Bremen Philharmonisches Staatsorchester
+布达佩斯爱乐乐团 = 布达佩斯管弦乐团 = 布达佩斯交响乐团 = Budapest Philharmonic Orchestra = BpPO
+德累斯顿爱乐童声合唱团 = Dresden Philharmonic Children's Chorus = ???????????
+SKD = 德累斯顿交响乐团 = Sächsische Staatskapelle Dresden = ???????? = S?chsische Staatskapelle Dresden = Staatskapelle Dresden
+法国广播电视管弦乐团 = Orchestra della Radiotelevisione Francese = ??????????
+ONF = ONP = 法国国家管弦乐团 = 巴黎国家交响乐团 = 巴黎国立交响乐团 = 法国国家电台管弦乐团 = 法国国家广播管弦乐团 = 法国国家交响乐团 = Orchestre National de France = Orchestre National de la Radiodiffusion Française(EN: Orchestre National de France)
+FRS = 法兰克福广播交响乐团 = 德国广播交响乐团 = Frankfurt Radio Symphony = hr-Sinfonieorchester Frankfurt = Radio-Sinfonie-Orchester Frankfurt = Sinfonie-Orchester des Hessischen Rundfunks
+费城交响乐团 = 费城管弦乐团 = 费城乐团 = Philadelphia Orchestra = PpO
+FRSO = 芬兰广播乐团 = 芬兰广播交响乐团 = Radio-orkesteri = Finnish Radio Symphony Orchestra
+哥德堡交响乐团 = Göteborgs Symfoniker = ??????? = G?teborgs Symfoniker = Gothenburg Symphony Orchestra
+哥伦比亚交响乐团 = Columbia Symphony Orchestra = ???????? = COLUABIA SYMPHONY ORCHESTRA = CoSO
+CDN = 国家音乐会古乐团 = 国家音乐会 = 国家音乐会乐团 = Le Concert des Nations
+RO = 海牙爱乐乐团 = 海牙管弦乐团 = 海牙交响乐团 = Hague Philharmonic Orchestra = Residentie Orkest = The Hague Philharmonic
+HPO = 赫尔辛基爱乐乐团 = 赫尔辛基管弦乐团 = 赫尔辛基交响乐团 = Helsinki Philharmonic Orchestra = Helsingin kaupunginorkesteri
+NPOIW = 华沙爱乐乐团 = 华沙爱乐 = 华沙交响乐团 = Warsaw Philharmonic Orchestra
+RPO = 皇家爱乐乐团 = 伦敦皇家爱乐乐团 = 英国皇家爱乐乐团 = Royal Philharmonic Orchestra
+RSPO = 皇家斯德哥尔摩爱乐乐团 = 斯德哥尔摩爱乐 = 斯德哥尔摩爱乐乐团 = 斯德哥尔摩皇家爱乐 = 斯德哥尔摩交响乐团 = Royal Stockholm Philharmonic Orchestra
+基洛夫剧院管弦乐团 = Orchestra of the Kirov Theatre = ????????? = Kirov Theatre Orchestra
+SFS = 旧金山交响乐团 = San Francisco Symphony
+科隆交响乐团 = Cologne Symphony Orchestra
+KRS = 科隆西德广播交响乐团 = 科隆广播 = 科隆广播交响乐团 = 科隆广播乐团 = 西德广播科隆交响乐团 = Kölner Rundfunk-Sinfonie-Orchester = WDR Sinfonieorchester Köln
+拉赫蒂交响乐团 = 拉赫蒂管弦乐团 = 拉赫蒂交响管弦乐团 = Lahti Symphony Orchestra
+SPPO = 列宁格勒爱乐乐团 = 列宁格勒交响乐团 = 圣彼得堡爱乐乐团 = Leningrad Philharmonic Orchestra = LePO = Saint Petersburg Philharmonic Orchestra
+LSO = 伦敦交响乐团 = London Symphony Orchestra = ??????
+AP = 洛杉矶爱乐乐团 = 洛杉矶爱乐 = 洛杉矶交响乐团 = LA爱乐 = Los Angeles Philharmonic
+MPO = 慕尼黑爱乐乐团 = 慕爱 = 慕尼黑爱乐 = 慕尼黑管弦乐团 = 慕尼黑交响乐团 = Munich Philharmonic Orchestra = Münchner Philharmoniker
+NYP = 纽约爱乐乐团 = 纽约爱乐 = 纽约爱乐交响乐团 = 纽约交响乐团 = New York Philharmonic = The New York Philharmonic
+NSO = 日本放送协会交响乐团 = NHK交响乐团 = NHK交响乐团（日本） = NHK Symphony Orchestra
+OSR = 瑞士罗曼德管弦乐团 = 日内瓦管弦乐团 = 瑞士法语区管弦乐团 = 瑞士法语区交响乐团 = 瑞士罗曼德交响乐团 = Orchestre de la Suisse Romande
+SFO = 斯德哥尔摩节日管弦乐团 = 斯德哥尔摩节庆管弦乐团 = 斯德哥尔摩节庆乐团 = 斯德哥尔摩节日乐团 = Stockholm Festival Orchestra = The Stockholm Festival Orchestra
+斯图加特广播交响乐团 = 德国西南广播电台交响乐团 = Radio-Sinfonieorchester Stuttgart des SWR = RSO Stuttgart = Stuttgart Radio Symphony Orchestra = SWR Radio Symphony Orchestra = SWR Symphony Orchestra Stuttgart
+SSO = USSO = 苏联国家交响乐团 = 苏联国家管弦乐团 = 苏联国立交响乐团 = USSR State Symphony Orchestra
+VPO = 维也纳爱乐乐团 = 维也纳爱乐 = 维也纳爱乐管弦乐团 = 维也纳爱乐交响乐团 = Vienna Philharmonic Orchestra = Vienna Philharmonic = Wiener Philharmoniker
+WSO = WSY = 维也纳交响乐团 = Wiener Symphoniker = Vienna Symphony Orchestra
+NWDR = 西北德意志广播交响乐团 = 德国NWDR交响乐团 = NWDR广播交响乐团 = NWDR交响乐团 = NWDR Sinfonieorchester = Das NWDR-Sinfonieorchester = NWDR-Sinfonieorchester = Sinfonieorchester des NWDR
+西南德意志广播交响乐团 = 巴登-巴登弗赖堡交响乐团 = SWR Sinfonieorchester Baden-Baden und Freiburg = South West German Radio Symphony Orchestra = SWR Symphonieorchester Baden-Baden und Freiburg
+HNP = HNPO = 匈牙利国家爱乐乐团 = 匈牙利爱乐乐团 = 匈牙利国爱 = 匈牙利国家交响乐团 = Hungarian National Philharmonic Orchestra
+音乐永恒乐团 = 永恒乐团 = 永恒音乐 = 永恒音乐管弦乐团 = 永恒音乐乐团 = MusicAeterna = musicAeterna
+BSSO = 英国广播公司苏格兰交响乐团 = BBC苏格兰管弦乐团 = BBC苏格兰交响乐团 = BBC苏格兰乐团 = BBC Scottish Symphony Orchestra
+CSO = 芝加哥交响乐团 = 芝加哥管弦乐团 = Chicago Symphony Orchestra
+智利交响乐团 = Orquesta Sinfónica de Chile = ?????? = Chilean Symphony Orchestra = Orquesta Sinf?nica de Chile
+Bamberg Symphony Orchestra = ??????? = Bamberger Symphoniker = BaSO
+BSOO = Bayerisches Staatsorchester = Bavarian State Opera Orchestra
+Bayreuth Festival Chorus = ?????????? = Bayreuth Festival Choir = Bayreuther Festspiele Chor
+Bayreuth Festival Orchestra = ????????? = Bayreuther Festspielorchester
+BBCSO = BBC Symphony Orchestra
+BeSO = Berliner Sinfonie-Orchester
+BSO = Boston Symphony Orchestra = ???????
+CBSO = City of Birmingham Symphony Orchestra
+Czech Philharmonic Orchestra = ?????? = Czech Philharmonic
+DRSO = Danmarks Radios Symfoniorkester = DR RadioSymfoniOrkestret = DR SymfoniOrkestret
+DSO = Detroit Symphony Orchestra
+DRP = Deutsche Radio Philharmonie Saarbrücken Kaiserslautern
+DSOB = Deutsches Symphonie-Orchester Berlin
+DPO = Dresdner Philharmonie
+LGO = Gewandhausorchester Leipzig
+GOK = Gürzenich-Orchester Köln
+GMJO = Gustav Mahler Jugendorchester
+HO = Hallé Orchestra
+HGO = Het Gelders Orkest = Arnhem Philharmonic Orchestra
+JPO = Japan Philharmonic Orchestra
+Junge Deutsche Philharmonie = ????????
+LPO = London Philharmonic Orchestra = ??????
+LzSO = Luzerner Sinfonieorchester
+MO = Minnesota Orchestra
+MnSO = Minneapolis Symphony Orchestra
+MRSO = Moscow Radio Symphony Orchestra = USSR All-Union National Radio and Central Television Symphony Orchestra = USSR State Radio and Television Symphony Orchestra
+NBC Symphony Orchestra = NBC????
+NDR = NDR Sinfonieorchester = NDR Elbphilharmonie Orchester
+NePO = Nederlands Philharmonisch Orkest = Netherlands Philharmonic Orchestra
+NJPO = New Japan Philharmonic
+NPO = New Philharmonia Orchestra
+VSOO = Orchester der Wiener Staatsoper
+Orchestre National de l'ORTF = ?????????????
+OPRF = Orchestre philharmonique de Radio France
+Orchestre Révolutionnaire et Romantique = ??????? = Orchestre R?volutionnaire et Romantique
+OSM = Orchestre symphonique de Montréal
+NYPSO = Philharmonic-Symphony Orchestra of New York
+PSH = Philharmonisches Staatsorchester Hamburg
+PSO = Pittsburgh Symphony Orchestra
+Prague Philharmonic Choir = ???????? = Prague Philharmonic Chorus
+RFO = Radio Filharmonisch Orkest = Netherlands Radio Philharmonic Orchestra
+RaSB = Radio-Symphonie-Orchester Berlin
+RIAS = RIAS-Symphonie-Orchester
+RLPO = Royal Liverpool Philharmonic
+RSSa = Rundfunk-Sinfonieorchester Saarbrücken
+RSStu = Radio-Sinfonieorchester Stuttgart = Südfunk-Sinfonieorchester
+LRSO = RSOL = Rundfunk-Sinfonie-Orchester Leipzig = Rundfunk-Sinfonieorchester Leipzig
+SKO = Saito Kinen Orchestra = ??????
+SCO = Scottish Chamber Orchestra
+Staatskapelle Berlin = ??????
+SRSO = Sveriges Radios Symfoniorkester = Swedish Radio Symphony Orchestra
+The British Symphony Orchestra = ??????
+The Cleveland Orchestra = ?????? = ????????
+TMSO = Tokyo Metropolitan Symphony Orchestra
+TSO = Tokyo Symphony Orchestra = ??????
+TOZ = Tonhalle-Orchester Zürich
+TO = Tonkünstler-Orchester
+TorSO = Toronto Symphony Orchestra
+West-Eastern Divan Orchestra = ????????
+YNSO = Yomiuri Nippon Symphony Orchestra
+Zagreb Philharmonic = ???????? = Zagreb Philharmonic Orchestra

@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "baseUrl": "https://your-llm-endpoint/v1",
+  "apiKey": "your-secret",
+  "model": "your-model",
+  "timeoutMs": 30000
+}

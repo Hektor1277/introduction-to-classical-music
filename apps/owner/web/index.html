@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>&#x53e4;&#x5178;&#x5bfc;&#x8046;&#x4e0d;&#x5168;&#x4e66; - &#x672c;&#x5730;&#x7ef4;&#x62a4;&#x5de5;&#x5177;</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles.css?v=20260415a" />
+  </head>
+  <body>
+    <main class="owner-shell">
+      <header class="owner-hero">
+        <div class="owner-hero__top">
+          <div class="owner-hero__heading">
+            <p class="owner-hero__eyebrow">Local Owner Tool</p>
+            <h1>&#x7ad9;&#x70b9;&#x7ef4;&#x62a4;&#x63a7;&#x5236;&#x53f0;</h1>
+            <p class="owner-hero__status-line">
+              <strong>&#x5f53;&#x524d;&#x6d3b;&#x52a8;&#x5e93;</strong>
+              <span id="owner-library-status">&#x6b63;&#x5728;&#x8bfb;&#x53d6;&#x5f53;&#x524d;&#x6d3b;&#x52a8;&#x5e93;</span>
+            </p>
+          </div>
+          <div class="owner-hero__actions">
+            <button id="library-import-button" type="button">&#x5bfc;&#x5165;&#x5e93;</button>
+            <button id="library-export-button" type="button">&#x5bfc;&#x51fa;&#x5e93;</button>
+            <button id="rebuild-button" type="button">&#x6784;&#x5efa;&#x4e0d;&#x5168;&#x4e66;</button>
+            <button id="library-open-button" type="button">&#x6253;&#x5f00;&#x4e0d;&#x5168;&#x4e66;</button>
+            <button id="refresh-button" type="button">&#x5237;&#x65b0;&#x6570;&#x636e;</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="owner-grid">
+        <aside class="owner-panel owner-panel--sidebar">
+          <h2>&#x6570;&#x636e;&#x6982;&#x89c8;</h2>
+          <dl class="owner-stats" id="owner-stats"></dl>
+
+          <div class="owner-sidebar__issues">
+            <div class="owner-card__header">
+              <h3>数据规范问题</h3>
+              <span id="owner-issue-count"></span>
+            </div>
+            <div id="owner-issues"></div>
+          </div>
+        </aside>
+
+        <section class="owner-panel owner-panel--main">
+          <div class="owner-tabs">
+            <button data-view-tab="detail" class="is-active" type="button">搜索与详情</button>
+            <button data-view-tab="checks" type="button">自动检查</button>
+            <button data-view-tab="review" type="button">候选审查</button>
+            <button data-view-tab="batch" type="button">批量更新</button>
+            <button data-view-tab="articles" type="button">专栏</button>
+            <button data-view-tab="logs" type="button">日志与回滚</button>
+          </div>
+          <div class="owner-panel-main-scroll">
+
+          <section class="owner-view is-active" data-view-panel="detail">
+            <div class="owner-search-bar">
+              <input id="owner-search-input" type="search" placeholder="搜索网站文本、作曲家、人物、作品或版本" />
+              <select id="owner-search-type">
+                <option value="">全部类型</option>
+                <option value="site">网站文本</option>
+                <option value="composer">作曲家</option>
+                <option value="person">人物</option>
+                <option value="work">作品</option>
+                <option value="recording">版本</option>
+              </select>
+              <button id="owner-search-button" type="button">搜索</button>
+            </div>
+
+            <div class="owner-detail-layout">
+              <section class="owner-card owner-card--search">
+                <div class="owner-card__header">
+                  <h2>搜索结果</h2>
+                  <span id="owner-search-count"></span>
+                </div>
+                <div class="owner-result-list" id="owner-search-results"></div>
+              </section>
+
+              <section class="owner-card owner-card--detail">
+                <div class="owner-tabs owner-tabs--inner">
+                  <button data-detail-tab="site" class="is-active" type="button">网站文本</button>
+                  <button data-detail-tab="composer" type="button">作曲家</button>
+                  <button data-detail-tab="person" type="button">人物</button>
+                  <button data-detail-tab="work" type="button">作品</button>
+                  <button data-detail-tab="recording" type="button">版本</button>
+                </div>
+
+                <section id="owner-inline-check-panel" class="owner-inline-check" hidden>
+                  <div class="owner-card__header">
+                    <div>
+                      <h3 id="owner-inline-check-title">当前条目自动检查</h3>
+                      <p id="owner-inline-check-subtitle">将在当前条目内展示检查进度与候选。</p>
+                    </div>
+                    <button type="button" id="owner-inline-check-close">关闭</button>
+                  </div>
+                  <div id="owner-inline-check-content"></div>
+                </section>
+
+                <div class="owner-tab-panels">
+                  <section data-detail-panel="site" class="owner-panel__inner is-active">
+                    <form class="owner-form" data-site-form>
+                      <label>网站标题<input name="title" required /></label>
+                      <label>一句话简介<input name="subtitle" /></label>
+                      <label>站点描述<textarea name="description"></textarea></label>
+                      <label>首页引言<textarea name="heroIntro"></textarea></label>
+                      <label>作曲家目录导语<textarea name="composerDirectoryIntro"></textarea></label>
+                      <label>指挥目录导语<textarea name="conductorDirectoryIntro"></textarea></label>
+                      <label>搜索页导语<textarea name="searchIntro"></textarea></label>
+                      <label>关于页面正文（每行一段）<textarea name="about"></textarea></label>
+                      <label>联系方式标签<input name="contactLabel" /></label>
+                      <label>联系方式内容<input name="contactValue" /></label>
+                      <label>版权说明<textarea name="copyrightNotice"></textarea></label>
+                      <div class="owner-form__actions">
+                        <button type="button" data-site-action="load">重新载入</button>
+                        <button type="button" data-site-action="save">保存网站文本</button>
+                      </div>
+                    </form>
+                  </section>
+
+                  <section data-detail-panel="composer" class="owner-panel__inner">
+                    <div class="owner-detail-toolbar">
+                      <button type="button" data-entity-check="composer">自动检查此条目</button>
+                    </div>
+                    <form class="owner-form owner-form--entity" data-entity-form="composer">
+                      <input type="hidden" name="existingId" />
+                      <input type="hidden" name="slug" />
+                      <input type="hidden" name="sortKey" />
+                      <div class="owner-form__hero owner-form__hero--entity">
+                        <div class="owner-form__hero-fields">
+                          <label class="owner-form__hero-field owner-form__hero-field--full">中文全名<input name="name" required /></label>
+                          <label class="owner-form__hero-field owner-form__hero-field--full">英文 / 原文全名<input name="nameLatin" /></label>
+                          <label class="owner-form__hero-field">国家<input name="country" /></label>
+                          <label class="owner-form__hero-field">生卒年<input name="lifeRange" placeholder="1824-1896" /></label>
+                        </div>
+                        <aside class="owner-form__media" data-image-preview-panel="composer">
+                          <div class="owner-image-preview" data-image-preview="composer">
+                            <span>暂无图片</span>
+                          </div>
+                          <label class="owner-upload-button">
+                            <span>上传图片</span>
+                            <input type="file" accept="image/*" data-image-upload="composer" hidden />
+                          </label>
+                          <p class="owner-form__hint">自动检查未找到合适图片时，可在这里手动上传。</p>
+                        </aside>
+                      </div>
+                      <p class="owner-form__hint">路径别名（Slug）和排序键由维护工具统一生成并管理，保存时会自动沿用现有值。</p>
+                      <fieldset class="owner-role-grid">
+                        <legend>角色</legend>
+                        <label><input type="checkbox" name="roles" value="composer" checked /> 作曲家</label>
+                        <label><input type="checkbox" name="roles" value="conductor" /> 指挥</label>
+                        <label><input type="checkbox" name="roles" value="soloist" /> 独奏</label>
+                        <label><input type="checkbox" name="roles" value="singer" /> 歌手</label>
+                        <label><input type="checkbox" name="roles" value="instrumentalist" /> 器乐</label>
+                      </fieldset>
+                      <label>简介<textarea name="summary"></textarea></label>
+                      <label>别名（含简称 / 缩写，每行一个）<textarea name="aliases"></textarea></label>
+                      <input name="avatarSrc" type="hidden" />
+                      <input name="imageSourceUrl" type="hidden" />
+                      <input name="imageSourceKind" type="hidden" />
+                      <input name="imageAttribution" type="hidden" />
+                      <input name="imageUpdatedAt" type="hidden" />
+                      <input name="birthYear" type="hidden" />
+                      <input name="deathYear" type="hidden" />
+                      <section class="owner-info-panel-editor">
+                        <div class="owner-card__header">
+                          <h3>导览</h3>
+                          <button type="button" data-info-panel-action="edit-text">编辑文本</button>
+                        </div>
+                        <input name="infoPanelText" type="hidden" />
+                        <input name="infoPanelCollectionLinks" type="hidden" />
+                        <div class="owner-info-panel-editor__summary" data-info-panel-text-summary>尚未填写导览文本。</div>
+                        <label>关联专栏<select name="infoPanelArticleId"></select></label>
+                        <section class="owner-structured-links owner-structured-links--info-panel" data-info-panel-link-host>
+                          <div class="owner-card__header">
+                            <h4>链接</h4>
+                            <button type="button" data-info-panel-link-action="add">新增链接</button>
+                          </div>
+                          <div data-info-panel-links-editor class="owner-link-editor-list"></div>
+                        </section>
+                      </section>
+                      <div class="owner-form__actions">
+                        <button type="button" data-action="reset">新建</button>
+                        <button type="button" data-action="preview">查看页面预览</button>
+                        <button type="button" data-action="save">保存作曲家</button>
+                        <button type="button" data-action="delete" class="owner-button--danger" hidden>删除作曲家</button>
+                      </div>
+                    </form>
+                  </section>
+
+                  <section data-detail-panel="person" class="owner-panel__inner">
+                    <div class="owner-detail-toolbar">
+                      <button type="button" data-entity-check="person">自动检查此条目</button>
+                    </div>
+                    <form class="owner-form owner-form--entity" data-entity-form="person">
+                      <input type="hidden" name="existingId" />
+                      <input type="hidden" name="slug" />
+                      <input type="hidden" name="sortKey" />
+                      <div class="owner-form__hero owner-form__hero--entity">
+                        <div class="owner-form__hero-fields">
+                          <label class="owner-form__hero-field owner-form__hero-field--full">中文全名<input name="name" required /></label>
+                          <label class="owner-form__hero-field owner-form__hero-field--full">英文 / 原文全名<input name="nameLatin" /></label>
+                          <label class="owner-form__hero-field">国家<input name="country" /></label>
+                          <label class="owner-form__hero-field">生卒年<input name="lifeRange" placeholder="1918-1990" /></label>
+                        </div>
+                        <aside class="owner-form__media" data-image-preview-panel="person">
+                          <div class="owner-image-preview" data-image-preview="person">
+                            <span>暂无图片</span>
+                          </div>
+                          <label class="owner-upload-button">
+                            <span>上传图片</span>
+                            <input type="file" accept="image/*" data-image-upload="person" hidden />
+                          </label>
+                          <p class="owner-form__hint">人物、乐团与组合均可在这里手动上传更合适的图片。</p>
+                        </aside>
+                      </div>
+                      <p class="owner-form__hint">路径别名（Slug）和排序键由维护工具统一生成并管理，保存时会自动沿用现有值。</p>
+                      <fieldset class="owner-role-grid">
+                        <legend>角色</legend>
+                        <label><input type="checkbox" name="roles" value="composer" /> 作曲家</label>
+                        <label><input type="checkbox" name="roles" value="conductor" /> 指挥</label>
+                        <label><input type="checkbox" name="roles" value="orchestra" /> 乐团</label>
+                        <label><input type="checkbox" name="roles" value="soloist" /> 独奏</label>
+                        <label><input type="checkbox" name="roles" value="singer" /> 歌手</label>
+                        <label><input type="checkbox" name="roles" value="ensemble" /> 组合</label>
+                        <label><input type="checkbox" name="roles" value="chorus" /> 合唱</label>
+                        <label><input type="checkbox" name="roles" value="instrumentalist" /> 器乐</label>
+                      </fieldset>
+                      <label>简介<textarea name="summary"></textarea></label>
+                      <label>别名（含简称 / 缩写，每行一个）<textarea name="aliases"></textarea></label>
+                      <input name="avatarSrc" type="hidden" />
+                      <input name="imageSourceUrl" type="hidden" />
+                      <input name="imageSourceKind" type="hidden" />
+                      <input name="imageAttribution" type="hidden" />
+                      <input name="imageUpdatedAt" type="hidden" />
+                      <input name="birthYear" type="hidden" />
+                      <input name="deathYear" type="hidden" />
+                      <section class="owner-info-panel-editor">
+                        <div class="owner-card__header">
+                          <h3>导览</h3>
+                          <button type="button" data-info-panel-action="edit-text">编辑文本</button>
+                        </div>
+                        <input name="infoPanelText" type="hidden" />
+                        <input name="infoPanelCollectionLinks" type="hidden" />
+                        <div class="owner-info-panel-editor__summary" data-info-panel-text-summary>尚未填写导览文本。</div>
+                        <label>关联专栏<select name="infoPanelArticleId"></select></label>
+                        <section class="owner-structured-links owner-structured-links--info-panel" data-info-panel-link-host>
+                          <div class="owner-card__header">
+                            <h4>链接</h4>
+                            <button type="button" data-info-panel-link-action="add">新增链接</button>
+                          </div>
+                          <div data-info-panel-links-editor class="owner-link-editor-list"></div>
+                        </section>
+                      </section>
+                      <div class="owner-form__actions">
+                        <button type="button" data-action="reset">新建</button>
+                        <button type="button" data-action="preview">查看页面预览</button>
+                        <button type="button" data-action="save">保存人物</button>
+                        <button type="button" data-action="delete" class="owner-button--danger" hidden>删除人物</button>
+                      </div>
+                    </form>
+                  </section>
+
+                  <section data-detail-panel="work" class="owner-panel__inner">
+                    <div class="owner-detail-toolbar">
+                      <button type="button" data-entity-check="work">自动检查此条目</button>
+                    </div>
+                    <form class="owner-form" data-entity-form="work">
+                      <input type="hidden" name="existingId" />
+                      <input type="hidden" name="groupPath" />
+                      <input type="hidden" name="slug" />
+                      <input type="hidden" name="sortKey" />
+                      <label>所属作曲家<select name="composerId"></select></label>
+                      <label>作品标题<input name="title" required /></label>
+                      <label>拉丁转写 / 英文标题<input name="titleLatin" /></label>
+                      <label>作品号 / Catalogue<input name="catalogue" /></label>
+                      <p class="owner-form__hint">类型路径、路径别名（Slug）和排序键由维护工具统一推导并管理；新建作品时会根据标题与作品号自动生成，已有条目会沿用现有值。</p>
+                      <label>别名（每行一个）<textarea name="aliases"></textarea></label>
+                      <label>简介<textarea name="summary"></textarea></label>
+                      <section class="owner-info-panel-editor">
+                        <div class="owner-card__header">
+                          <h3>导览</h3>
+                          <button type="button" data-info-panel-action="edit-text">编辑文本</button>
+                        </div>
+                        <input name="infoPanelText" type="hidden" />
+                        <input name="infoPanelCollectionLinks" type="hidden" />
+                        <div class="owner-info-panel-editor__summary" data-info-panel-text-summary>尚未填写导览文本。</div>
+                        <label>关联专栏<select name="infoPanelArticleId"></select></label>
+                        <section class="owner-structured-links owner-structured-links--info-panel" data-info-panel-link-host>
+                          <div class="owner-card__header">
+                            <h4>链接</h4>
+                            <button type="button" data-info-panel-link-action="add">新增链接</button>
+                          </div>
+                          <div data-info-panel-links-editor class="owner-link-editor-list"></div>
+                        </section>
+                      </section>
+                      <div class="owner-form__actions">
+                        <button type="button" data-action="reset">新建</button>
+                        <button type="button" data-action="preview">查看页面预览</button>
+                        <button type="button" data-action="save">保存作品</button>
+                        <button type="button" data-action="delete" class="owner-button--danger" hidden>删除作品</button>
+                      </div>
+                    </form>
+                  </section>
+
+                  <section data-detail-panel="recording" class="owner-panel__inner">
+                    <div class="owner-detail-toolbar">
+                      <button type="button" data-entity-check="recording">自动检查此条目</button>
+                    </div>
+                    <form class="owner-form owner-form--entity" data-entity-form="recording">
+                      <input type="hidden" name="existingId" />
+                      <input type="hidden" name="slug" />
+                      <input type="hidden" name="sortKey" />
+                      <div class="owner-form__hero owner-form__hero--entity owner-form__hero--recording">
+                        <div class="owner-form__hero-fields">
+                          <label class="owner-form__hero-field">所属作曲家<select name="selectedComposerId"></select></label>
+                          <label class="owner-form__hero-field">所属作品<select name="workId" disabled></select></label>
+                          <label class="owner-form__hero-field">体裁<select name="workTypeHint">
+                            <option value="orchestral">orchestral / 管弦乐</option>
+                            <option value="concerto">concerto / 协奏曲</option>
+                            <option value="opera_vocal">opera_vocal / 歌剧与声乐</option>
+                            <option value="chamber_solo">chamber_solo / 室内乐与独奏</option>
+                            <option value="unknown">unknown / 未分类</option>
+                          </select></label>
+                          <label class="owner-form__hero-field">指挥<select name="conductorPersonId"></select></label>
+                          <label class="owner-form__hero-field">乐团<select name="orchestraPersonId"></select></label>
+                          <label class="owner-form__hero-field">版本标题<input name="title" required /></label>
+                          <label class="owner-form__hero-field owner-form__hero-field--full">演出时间 / 地点<input name="eventMeta" placeholder="1984 / Chicago" /></label>
+                          <label class="owner-form__hero-field owner-form__hero-field--checkbox owner-checkbox"><input type="checkbox" name="isPrimaryRecommendation" /> 设为主推荐</label>
+                        </div>
+                        <div class="owner-form__recording-sidecar">
+                          <div class="owner-form__recording-meta">
+                            <label>专辑名称<input name="albumTitle" /></label>
+                            <label>发行商<input name="label" /></label>
+                            <label>发行日期<input name="releaseDate" /></label>
+                          </div>
+                          <aside class="owner-form__media" data-image-preview-panel="recording">
+                            <div class="owner-image-preview" data-image-preview="recording">
+                              <span>暂无图片</span>
+                            </div>
+                            <label class="owner-upload-button">
+                              <span>上传图片</span>
+                              <input type="file" accept="image/*" data-image-upload="recording" hidden />
+                            </label>
+                            <p class="owner-form__hint">可手动上传版本封面或现场图片，自动写入图片列表第一项。</p>
+                          </aside>
+                        </div>
+                      </div>
+                      <label>备注<textarea name="notes"></textarea></label>
+                      <section class="owner-recording-credit-editor" data-recording-credit-editor>
+                        <div class="owner-card__header">
+                          <h3>参与署名</h3>
+                          <button type="button" data-recording-credit-add>新增署名行</button>
+                        </div>
+                        <div class="owner-recording-credit-editor__rows" data-recording-credit-rows></div>
+                        <p class="owner-form__hint">适用于合唱交响曲、歌剧、芭蕾、清唱剧和室内乐临时组合等多人物 / 多团体版本。快捷字段中的指挥、乐团会同步到这里。</p>
+                      </section>
+                      <input name="credits" type="hidden" />
+                      <p class="owner-form__hint">路径别名（Slug）和排序键由维护工具统一管理，保存时自动生成并沿用现有值。</p>
+                      <input name="images" type="hidden" />
+                      <input name="performanceDateText" type="hidden" />
+                      <input name="venueText" type="hidden" />
+                      <input name="links" type="hidden" />
+                      <section class="owner-structured-links">
+                        <div class="owner-card__header">
+                          <h3>资源链接</h3>
+                          <button type="button" data-recording-link-action="add">新增链接</button>
+                        </div>
+                        <div data-recording-links-editor class="owner-link-editor-list"></div>
+                        <p class="owner-form__hint">点击资源按钮可查看、编辑平台与 URL，并直接打开外部链接验证。</p>
+                      </section>
+                      <p class="owner-form__hint">图片明细字段已隐藏；请使用上方预览、上传和自动检查候选来维护版本图片。</p>
+                      <section class="owner-info-panel-editor">
+                        <div class="owner-card__header">
+                          <h3>导览</h3>
+                          <button type="button" data-info-panel-action="edit-text">编辑文本</button>
+                        </div>
+                        <input name="infoPanelText" type="hidden" />
+                        <input name="infoPanelCollectionLinks" type="hidden" />
+                        <div class="owner-info-panel-editor__summary" data-info-panel-text-summary>尚未填写导览文本。</div>
+                        <label>关联专栏<select name="infoPanelArticleId"></select></label>
+                        <section class="owner-structured-links owner-structured-links--info-panel" data-info-panel-link-host>
+                          <div class="owner-card__header">
+                            <h4>链接</h4>
+                            <button type="button" data-info-panel-link-action="add">新增链接</button>
+                          </div>
+                          <div data-info-panel-links-editor class="owner-link-editor-list"></div>
+                        </section>
+                      </section>
+                      <div class="owner-form__actions">
+                        <button type="button" data-action="reset">新建</button>
+                        <button type="button" data-action="preview">查看页面预览</button>
+                        <button type="button" data-action="save">保存版本</button>
+                        <button type="button" data-action="delete" class="owner-button--danger" hidden>删除版本</button>
+                      </div>
+                    </form>
+                  </section>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="owner-view" data-view-panel="checks">
+            <div class="owner-card">
+              <div class="owner-card__header">
+                <h2>自动检查</h2>
+                <span>先预览选中范围，再启动后台任务</span>
+              </div>
+
+              <form id="automation-check-form" class="owner-form owner-form--compact">
+                <fieldset>
+                  <legend>检查类别</legend>
+                  <label><input type="checkbox" name="categories" value="composer" /> 作曲家</label>
+                  <label><input type="checkbox" name="categories" value="conductor" /> 指挥</label>
+                  <label><input type="checkbox" name="categories" value="orchestra" /> 乐团</label>
+                  <label><input type="checkbox" name="categories" value="artist" /> 艺术家</label>
+                  <label><input type="checkbox" name="categories" value="recording" /> 版本</label>
+                </fieldset>
+
+                <div class="owner-filter-grid">
+                  <label>限定作曲家<select name="composerId"></select></label>
+                  <label>限定作品<select name="workId"></select></label>
+                  <label>限定指挥<select name="conductorId"></select></label>
+                  <label>限定艺术家<select name="artistId"></select></label>
+                  <label>限定乐团<select name="orchestraId"></select></label>
+                  <label>限定版本<select name="recordingId"></select></label>
+                </div>
+
+                <div class="owner-form__actions">
+                  <button type="button" id="preview-automation-selection">刷新选取预览</button>
+                  <button type="button" id="run-automation-button">开始自动检查</button>
+                  <button type="button" id="cancel-automation-button">取消任务</button>
+                </div>
+              </form>
+
+              <section class="owner-selection-preview">
+                <div class="owner-card__header">
+                  <h3>受影响条目预览</h3>
+                  <div class="owner-section-toggle">
+                    <span id="automation-preview-total">0 条</span>
+                    <button type="button" data-collapsible-toggle="automation-preview-panel">折叠</button>
+                  </div>
+                </div>
+                <div data-collapsible-panel="automation-preview-panel">
+                  <div id="automation-selection-preview"></div>
+                </div>
+              </section>
+
+              <section class="owner-llm-panel">
+                <div class="owner-card__header">
+                  <h3>LLM 辅助</h3>
+                  <div class="owner-section-toggle">
+                    <span id="llm-config-summary"></span>
+                    <button type="button" id="llm-panel-toggle" data-collapsible-toggle="llm-panel">折叠</button>
+                  </div>
+                </div>
+                <div id="llm-panel-content" data-collapsible-panel="llm-panel">
+                  <form id="llm-config-form" class="owner-form owner-form--compact">
+                    <label class="owner-checkbox"><input type="checkbox" name="enabled" /> 启用 OpenAI-compatible LLM 辅助</label>
+                    <label>Base URL<input name="baseUrl" placeholder="https://api.example.com/v1" /></label>
+                    <label>API Key<input name="apiKey" type="text" autocomplete="off" spellcheck="false" /></label>
+                    <p class="owner-form__hint">密钥仅保存在本机。保存后会继续显示；留空时会沿用已保存密钥，不会自动清除。</p>
+                    <label>Model<input name="model" placeholder="gpt-4.1-mini" /></label>
+                    <label>超时毫秒<input name="timeoutMs" inputmode="numeric" /></label>
+                    <div class="owner-form__actions">
+                      <button type="button" id="save-llm-config">保存配置</button>
+                      <button type="button" id="test-llm-config">测试连接</button>
+                    </div>
+                  </form>
+                </div>
+                <pre id="llm-test-result">等待测试。</pre>
+              </section>
+            </div>
+
+            <div class="owner-card owner-job-card">
+              <div class="owner-card__header">
+                <h2>任务看板</h2>
+                <div class="owner-section-toggle">
+                  <span id="automation-job-status">尚未启动</span>
+                  <button type="button" data-collapsible-toggle="automation-job-panel">折叠</button>
+                </div>
+              </div>
+              <div data-collapsible-panel="automation-job-panel">
+                <div class="owner-job-progress">
+                  <div class="owner-job-progress__bar">
+                    <div id="automation-job-progress-bar"></div>
+                  </div>
+                  <p id="automation-job-progress-text">0 / 0</p>
+                </div>
+                <div class="owner-job-metrics" id="automation-job-metrics"></div>
+                <div class="owner-job-board">
+                  <div class="owner-job-items" id="automation-job-items"></div>
+                  <div class="owner-job-detail" id="automation-job-detail"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="owner-view" data-view-panel="review">
+            <div class="owner-card">
+              <div class="owner-card__header">
+                <h2>候选审查</h2>
+                <span>先查看，再确认，最后统一应用</span>
+              </div>
+              <div class="owner-form__actions owner-review-toolbar">
+                <label class="owner-inline-label">选择 run
+                  <select id="review-run-select"></select>
+                </label>
+                <button type="button" id="apply-page-confirmed-button">应用当前页已确认候选</button>
+                <button type="button" id="ignore-page-pending-button">放弃当前页待审候选</button>
+                <button type="button" id="apply-confirmed-button">应用全部已确认候选</button>
+                <button type="button" id="ignore-pending-button">放弃全部待审候选</button>
+              </div>
+              <div id="review-pagination-top" class="owner-review-pagination"></div>
+              <div id="proposal-review-list" class="owner-proposal-list"></div>
+              <div id="review-pagination-bottom" class="owner-review-pagination"></div>
+              <div class="owner-form__actions owner-review-toolbar owner-review-toolbar--footer">
+                <button type="button" id="apply-page-confirmed-button-footer">应用当前页已确认候选</button>
+                <button type="button" id="ignore-page-pending-button-footer">放弃当前页待审候选</button>
+                <button type="button" id="apply-confirmed-button-footer">应用全部已确认候选</button>
+                <button type="button" id="ignore-pending-button-footer">放弃全部待审候选</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="owner-view" data-view-panel="batch">
+            <div class="owner-card owner-batch-card">
+              <div class="owner-card__header">
+                <h2>批量更新</h2>
+                <span>文本名单 -> 分析预填 -> 自动检查 -> 确认应用</span>
+              </div>
+              <div class="owner-batch-layout">
+                <section class="owner-batch-input">
+                  <div class="owner-filter-grid">
+                    <label>已选作曲家<select id="batch-composer-select"></select></label>
+                    <label>已选作品<select id="batch-work-select"></select></label>
+                    <label>版本模板
+                      <select id="batch-work-type-select">
+                        <option value="orchestral">orchestral / 管弦乐</option>
+                        <option value="concerto">concerto / 协奏曲</option>
+                        <option value="opera_vocal">opera_vocal / 歌剧与声乐</option>
+                        <option value="chamber_solo">chamber_solo / 室内乐与独奏</option>
+                        <option value="unknown">unknown / 未分类</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="owner-upload-row">
+                    <label class="owner-upload-button">
+                      <span>选择文本文件</span>
+                      <input id="batch-file-input" type="file" accept=".txt,.md,.text" hidden />
+                    </label>
+                    <span id="batch-file-status">尚未选择文件</span>
+                  </div>
+                  <label>批量更新文本
+                    <textarea id="batch-source-text" placeholder="Kleiber | Wiener Philharmoniker | 1975 | -&#10;Karajan | Berliner Philharmoniker | 1963 | https://example.com"></textarea>
+                  </label>
+                    <p class="owner-form__hint">
+                      当前批量导入仅创建版本粗条目。请先选定作曲家与作品，再按固定模板输入，每行一个版本，字段使用 | 分隔，缺失值写 -。
+                    </p>
+                    <p id="batch-progress-status" class="owner-form__hint">状态：等待分析。</p>
+                  <div class="owner-form__actions">
+                    <button id="batch-analyze-button" type="button">开始分析</button>
+                    <button id="batch-confirm-create-button" type="button" disabled>确认创建</button>
+                    <button id="batch-check-button" type="button" disabled>自动检查</button>
+                    <button id="batch-apply-button" type="button" disabled>确认应用</button>
+                    <button id="batch-abandon-unconfirmed-button" type="button" disabled>放弃未确认</button>
+                    <button id="batch-abandon-button" type="button" disabled>全部放弃</button>
+                  </div>
+                  <p class="owner-form__hint">
+                    模板文件：<a href="/template/batch-update-template.md" target="_blank" rel="noreferrer">Markdown</a> /
+                    <a href="/template/batch-update-template.txt" target="_blank" rel="noreferrer">TXT</a>
+                  </p>
+                  <div id="batch-inline-status" class="owner-inline-status">等待分析。</div>
+                  <div id="batch-session-summary" class="owner-batch-summary">等待分析。</div>
+                </section>
+                <section class="owner-batch-preview">
+                  <div class="owner-card__header">
+                    <h3>创建预览</h3>
+                    <span id="batch-preview-count">0 条</span>
+                  </div>
+                  <div id="batch-preview-list"></div>
+                </section>
+              </div>
+              <section class="owner-batch-review">
+                <div class="owner-card__header">
+                  <h3>自动检查候选</h3>
+                  <span id="batch-review-status">尚未执行</span>
+                </div>
+                <div id="batch-review-list"></div>
+              </section>
+            </div>
+          </section>
+
+          <section class="owner-view" data-view-panel="articles">
+            <div class="owner-card owner-article-manager">
+              <div class="owner-card__header">
+                <h2>专栏</h2>
+                <span>创建、检索、修改与删除站内专栏页面</span>
+              </div>
+              <div class="owner-tabs owner-tabs--inner">
+                <button data-article-tab="create" class="is-active" type="button">创建专栏</button>
+                <button data-article-tab="list" type="button">查看现有专栏</button>
+              </div>
+              <div class="owner-article-layout">
+                <aside class="owner-article-sidebar" data-article-panel="list">
+                  <label>搜索专栏
+                    <input id="article-search-input" type="search" placeholder="搜索标题或摘要" />
+                  </label>
+                  <div id="article-search-results" class="owner-result-list"></div>
+                </aside>
+                <section class="owner-article-editor-shell">
+                  <section class="owner-panel__inner is-active" data-article-panel="create">
+                    <form id="article-form" class="owner-form">
+                      <input type="hidden" name="existingId" />
+                      <input type="hidden" name="slug" />
+                      <label>标题<input name="title" required /></label>
+                      <label>摘要<input name="summary" /></label>
+                      <p class="owner-form__hint">路径别名（Slug）由维护工具根据标题自动生成；编辑已有专栏时会沿用现有值。</p>
+                      <label class="owner-checkbox">
+                        <input name="showOnHome" type="checkbox" />
+                        <span>在首页推荐专栏中展示</span>
+                      </label>
+                      <div class="owner-markdown-toolbar">
+                        <button type="button" data-markdown-insert="# ">一级标题</button>
+                        <button type="button" data-markdown-insert="## ">二级标题</button>
+                        <button type="button" data-markdown-wrap="**">粗体</button>
+                        <button type="button" data-markdown-insert="> ">引用</button>
+                        <button type="button" data-markdown-insert="- ">无序列表</button>
+                      </div>
+                      <label>Markdown 内容<textarea name="markdown" placeholder="# 标题"></textarea></label>
+                      <div class="owner-form__actions">
+                        <label class="owner-upload-button">
+                          <span>插入图片</span>
+                          <input id="article-image-input" type="file" accept="image/*" hidden />
+                        </label>
+                        <button id="article-preview-button" type="button">预览专栏</button>
+                        <button id="article-save-button" type="button">创建专栏</button>
+                        <button id="article-reset-button" type="button">放弃</button>
+                        <button id="article-delete-button" type="button" class="owner-button--danger">删除</button>
+                      </div>
+                    </form>
+                  </section>
+                </section>
+              </div>
+            </div>
+          </section>
+
+          <section class="owner-view" data-view-panel="logs">
+            <div class="owner-card">
+              <div class="owner-card__header">
+                <h2>日志与回滚</h2>
+                <span>查看 run、快照与恢复入口</span>
+              </div>
+              <label class="owner-inline-label">选择 run
+                <select id="log-run-select"></select>
+              </label>
+              <div id="run-log-panel"></div>
+            </div>
+          </section>
+          </div>
+        </section>
+      </section>
+
+      <section class="owner-panel">
+        <h2>结果</h2>
+        <pre id="result-panel">等待操作。</pre>
+      </section>
+    </main>
+
+    <dialog id="owner-text-dialog" class="owner-dialog">
+      <article class="owner-dialog__card">
+        <div class="owner-card__header">
+          <h3 id="owner-text-dialog-title">编辑导览文本</h3>
+          <button type="button" id="owner-text-dialog-close">关闭</button>
+        </div>
+        <div class="owner-dialog__content">
+          <textarea id="owner-text-dialog-content" class="owner-dialog__textarea" placeholder="输入导览文本"></textarea>
+        </div>
+        <div class="owner-form__actions">
+          <button type="button" id="owner-text-dialog-save">保存文本</button>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog id="owner-link-dialog" class="owner-dialog">
+      <article class="owner-dialog__card owner-dialog__card--wide">
+        <div class="owner-card__header">
+          <h3 id="owner-link-dialog-title">编辑资源链接</h3>
+          <button type="button" id="owner-link-dialog-close">关闭</button>
+        </div>
+        <form id="owner-link-dialog-form" class="owner-form owner-form--compact">
+          <label>链接类型
+            <select name="linkType">
+              <option value="external">外部链接</option>
+              <option value="local">本地文件</option>
+            </select>
+          </label>
+          <label>平台<input name="platform" /></label>
+          <label data-link-dialog-field="url">URL<input name="url" type="url" /></label>
+          <label data-link-dialog-field="localPath" hidden>本地路径<input name="localPath" /></label>
+          <button type="button" class="owner-button--secondary" data-link-dialog-action="browse-local" hidden>选择本地文件</button>
+          <label>可见性
+            <select name="visibility">
+              <option value="public">公开构建可见</option>
+              <option value="local-only">仅本地可见</option>
+            </select>
+          </label>
+          <label>标题<input name="title" /></label>
+          <p id="owner-link-dialog-meta" class="owner-form__hint" hidden></p>
+          <div class="owner-form__actions">
+            <button type="button" id="owner-link-dialog-open">打开链接</button>
+            <button type="button" id="owner-link-dialog-save">保存链接</button>
+            <button type="button" id="owner-link-dialog-delete" class="owner-button--danger">删除链接</button>
+          </div>
+        </form>
+      </article>
+    </dialog>
+
+    <dialog id="owner-preview-dialog" class="owner-dialog">
+      <article class="owner-dialog__card owner-dialog__card--wide">
+        <div class="owner-card__header">
+          <h3 id="owner-preview-dialog-title">页面预览</h3>
+          <button type="button" id="owner-preview-dialog-close">关闭</button>
+        </div>
+        <div id="owner-preview-dialog-content" class="owner-dialog__content owner-dialog__content--preview"></div>
+      </article>
+    </dialog>
+
+    <dialog id="owner-confirm-dialog" class="owner-dialog">
+      <article class="owner-dialog__card owner-dialog__card--narrow">
+        <div class="owner-card__header">
+          <h3 id="owner-confirm-dialog-title">确认操作</h3>
+          <button type="button" id="owner-confirm-dialog-close">关闭</button>
+        </div>
+        <div id="owner-confirm-dialog-content" class="owner-dialog__content"></div>
+        <div class="owner-form__actions">
+          <button type="button" id="owner-confirm-dialog-cancel">取消</button>
+          <button type="button" id="owner-confirm-dialog-confirm" class="owner-button--danger">确认删除</button>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog id="owner-article-preview-dialog" class="owner-dialog">
+      <article class="owner-dialog__card owner-dialog__card--wide">
+        <div class="owner-card__header">
+          <h3>专栏预览</h3>
+          <div class="owner-section-toggle">
+            <span id="article-preview-status">等待输入</span>
+            <button type="button" id="owner-article-preview-close">关闭</button>
+          </div>
+        </div>
+        <div id="article-preview-render" class="article-body owner-dialog__content owner-dialog__content--preview"></div>
+      </article>
+    </dialog>
+
+<script src="/app.js?v=20260415a" type="module"></script>
+  </body>
+</html>

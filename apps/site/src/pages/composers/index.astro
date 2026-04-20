@@ -1,0 +1,51 @@
+---
+import DirectoryBrowser from "@/components/DirectoryBrowser.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildComposerDirectoryEntry } from "@/lib/directory";
+import { readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+
+const [site, library] = await Promise.all([readGeneratedSite(), readGeneratedLibrary()]);
+
+const recordingWeightByWork = new Map<string, { count: number; primary: number }>();
+for (const recording of library.recordings) {
+  const bucket = recordingWeightByWork.get(recording.workId) ?? { count: 0, primary: 0 };
+  bucket.count += 1;
+  if (recording.isPrimaryRecommendation) {
+    bucket.primary += 1;
+  }
+  recordingWeightByWork.set(recording.workId, bucket);
+}
+
+const entries = library.composers.map((composer) => {
+  const representativeWorks = library.works
+    .filter((work) => work.composerId === composer.id)
+    .sort((left, right) => {
+      const leftWeight = recordingWeightByWork.get(left.id) ?? { count: 0, primary: 0 };
+      const rightWeight = recordingWeightByWork.get(right.id) ?? { count: 0, primary: 0 };
+      return (
+        rightWeight.primary - leftWeight.primary ||
+        rightWeight.count - leftWeight.count ||
+        left.sortKey.localeCompare(right.sortKey, "zh-Hans-CN")
+      );
+    })
+    .slice(0, 4)
+    .map((work) => work.title);
+
+  return buildComposerDirectoryEntry(composer, {
+    href: `/composers/${composer.slug}/`,
+    representativeWorks,
+  });
+});
+---
+
+<BaseLayout title={`${site.title} | 作曲家`} description="按姓氏、出生年份或国家浏览站内作曲家目录。">
+  <div class="container page-section page-section--plain">
+    <DirectoryBrowser
+      eyebrow="Composers"
+      title="作曲家目录"
+      intro={site.composerDirectoryIntro}
+      entries={entries}
+      emptyMessage="暂无作曲家条目。"
+    />
+  </div>
+</BaseLayout>

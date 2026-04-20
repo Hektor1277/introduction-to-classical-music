@@ -1,0 +1,72 @@
+---
+interface Props {
+  text: string;
+  className?: string;
+  containerClassName?: string;
+  maxLines?: number;
+}
+
+const { text, className = "", containerClassName = "", maxLines = 8 } = Astro.props;
+const normalizedText = String(text || "").trim();
+const isExpandable = normalizedText.length > 220;
+---
+
+{
+  normalizedText && (
+    <div
+      class:list={["expandable-summary", containerClassName]}
+      data-expandable-summary
+      style={`--expandable-summary-lines:${maxLines};`}
+    >
+      <p class:list={["expandable-summary__content", className]} data-expandable-summary-content>
+        {normalizedText}
+      </p>
+      {isExpandable && (
+        <div class="expandable-summary__tail" data-expandable-summary-tail>
+          <button
+            type="button"
+            class="expandable-summary__toggle expandable-summary__toggle--inline"
+            data-expandable-summary-toggle
+            data-expand-label="展开"
+            data-collapse-label="折叠"
+            aria-expanded="false"
+          >
+            展开
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+<script is:inline>
+  const expandableSummaries = document.querySelectorAll("[data-expandable-summary]");
+
+  expandableSummaries.forEach((container) => {
+    const content = container.querySelector("[data-expandable-summary-content]");
+    const toggle = container.querySelector("[data-expandable-summary-toggle]");
+    const tail = container.querySelector("[data-expandable-summary-tail]");
+
+    if (!content || !toggle || !tail) {
+      return;
+    }
+
+    const updateVisibility = () => {
+      const collapsed = !container.classList.contains("is-expanded");
+      const overflowing = content.scrollHeight > content.clientHeight + 2;
+      tail.hidden = !overflowing && collapsed;
+    };
+
+    toggle.addEventListener("click", () => {
+      const expanded = container.classList.toggle("is-expanded");
+      toggle.textContent = expanded ? toggle.dataset.collapseLabel || "折叠" : toggle.dataset.expandLabel || "展开";
+      toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+      if (!expanded) {
+        requestAnimationFrame(updateVisibility);
+      }
+    });
+
+    requestAnimationFrame(updateVisibility);
+    window.addEventListener("resize", updateVisibility, { passive: true });
+  });
+</script>

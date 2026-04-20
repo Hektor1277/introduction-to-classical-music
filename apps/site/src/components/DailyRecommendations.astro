@@ -1,0 +1,201 @@
+---
+interface RecommendationItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  workPrimary: string;
+  workSecondary: string;
+  composerPrimary: string;
+  composerSecondary: string;
+  principalPrimary: string;
+  principalSecondary: string;
+  supportingPrimary: string;
+  supportingSecondary: string;
+  ensemblePrimary: string;
+  ensembleSecondary: string;
+  datePlacePrimary: string;
+  datePlaceSecondary: string;
+  href: string;
+  imageSrc: string;
+}
+
+interface Props {
+  items: RecommendationItem[];
+}
+
+const { items } = Astro.props;
+const initialItems = items.slice(0, 5);
+
+const formatDatePlace = (item: RecommendationItem) =>
+  [item.datePlacePrimary, item.datePlaceSecondary].filter(Boolean).join(" | ");
+
+const lineValue = (value: string) => value || "\u00a0";
+---
+
+<section class="daily-section">
+  <div class="section-heading section-heading--centered">
+    <p class="section-heading__eyebrow">Daily Rotation</p>
+    <h2>{"\u6bcf\u65e5\u63a8\u8350"}</h2>
+  </div>
+
+  <div class="daily-strip" data-daily-strip>
+    {initialItems.map((item) => {
+      const datePlaceLine = formatDatePlace(item);
+      return (
+        <article class="daily-card">
+          <a class="daily-card__link" href={item.href}>
+            {item.imageSrc ? (
+              <img class="daily-card__image" src={item.imageSrc} alt={item.title} loading="lazy" />
+            ) : (
+              <div class="daily-card__image daily-card__image--empty">{item.title}</div>
+            )}
+            <div class="daily-card__body">
+              <div class="daily-card__group daily-card__work-group">
+                <p
+                  class:list={[
+                    "daily-card__work daily-card__line daily-card__line--fade daily-card__line--work-primary",
+                    !item.workPrimary && "daily-card__line--empty",
+                  ]}
+                  title={item.workPrimary || undefined}
+                >
+                  {lineValue(item.workPrimary)}
+                </p>
+                <p
+                  class:list={[
+                    "daily-card__work daily-card__line daily-card__line--fade daily-card__line--work-secondary",
+                    !item.workSecondary && "daily-card__line--empty",
+                  ]}
+                  title={item.workSecondary || undefined}
+                >
+                  {lineValue(item.workSecondary)}
+                </p>
+                <p
+                  class:list={[
+                    "daily-card__composer daily-card__line daily-card__line--fade",
+                    !item.composerPrimary && "daily-card__line--empty",
+                  ]}
+                  title={item.composerPrimary || undefined}
+                >
+                  {lineValue(item.composerPrimary)}
+                </p>
+                <p
+                  class:list={[
+                    "daily-card__composer daily-card__line daily-card__line--fade daily-card__line--muted",
+                    !item.composerSecondary && "daily-card__line--empty",
+                  ]}
+                  title={item.composerSecondary || undefined}
+                >
+                  {lineValue(item.composerSecondary)}
+                </p>
+              </div>
+
+              <div class="daily-card__group daily-card__recording-group">
+                <h3
+                  class:list={[
+                    "daily-card__title daily-card__line daily-card__line--fade",
+                    !item.title && "daily-card__line--empty",
+                  ]}
+                  title={item.title || undefined}
+                >
+                  {lineValue(item.title)}
+                </h3>
+                <p
+                  class:list={[
+                    "daily-card__subtitle daily-card__line daily-card__line--fade",
+                    !item.subtitle && "daily-card__line--empty",
+                  ]}
+                  title={item.subtitle || undefined}
+                >
+                  {lineValue(item.subtitle)}
+                </p>
+                <p
+                  class:list={[
+                    "daily-card__date daily-card__line daily-card__line--fade",
+                    !datePlaceLine && "daily-card__line--empty",
+                  ]}
+                  title={datePlaceLine || undefined}
+                >
+                  {lineValue(datePlaceLine)}
+                </p>
+              </div>
+            </div>
+          </a>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<script is:inline define:vars={{ items }}>
+  const strip = document.querySelector("[data-daily-strip]");
+
+  const hashValue = (value) => {
+    let hash = 2166136261;
+    for (let index = 0; index < value.length; index += 1) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  };
+
+  const pickDaily = (allItems, dateKey, count) =>
+    [...allItems]
+      .sort((left, right) => hashValue(`${dateKey}:${left.id}`) - hashValue(`${dateKey}:${right.id}`))
+      .slice(0, Math.min(count, allItems.length));
+
+  const escapeHtml = (value) =>
+    String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+
+  const joinDatePlace = (item) => [item.datePlacePrimary, item.datePlaceSecondary].filter(Boolean).join(" | ");
+
+  const renderLine = (tagName, className, value) => {
+    const hasValue = Boolean(value);
+    const lineClass = hasValue ? className : `${className} daily-card__line--empty`;
+    const titleAttr = hasValue ? ` title="${escapeHtml(value)}"` : "";
+    const content = hasValue ? escapeHtml(value) : "&nbsp;";
+    return `<${tagName} class="${lineClass}"${titleAttr}>${content}</${tagName}>`;
+  };
+
+  const render = (records) => {
+    if (!strip) {
+      return;
+    }
+
+    strip.innerHTML = records
+      .map((item) => {
+        const image = item.imageSrc
+          ? `<img class="daily-card__image" src="${escapeHtml(item.imageSrc)}" alt="${escapeHtml(item.title)}" loading="lazy" />`
+          : `<div class="daily-card__image daily-card__image--empty">${escapeHtml(item.title)}</div>`;
+        const datePlaceLine = joinDatePlace(item);
+
+        return `
+          <article class="daily-card">
+            <a class="daily-card__link" href="${escapeHtml(item.href)}">
+              ${image}
+              <div class="daily-card__body">
+                <div class="daily-card__group daily-card__work-group">
+                  ${renderLine("p", "daily-card__work daily-card__line daily-card__line--fade daily-card__line--work-primary", item.workPrimary)}
+                  ${renderLine("p", "daily-card__work daily-card__line daily-card__line--fade daily-card__line--work-secondary", item.workSecondary)}
+                  ${renderLine("p", "daily-card__composer daily-card__line daily-card__line--fade", item.composerPrimary)}
+                  ${renderLine("p", "daily-card__composer daily-card__line daily-card__line--fade daily-card__line--muted", item.composerSecondary)}
+                </div>
+                <div class="daily-card__group daily-card__recording-group">
+                  ${renderLine("h3", "daily-card__title daily-card__line daily-card__line--fade", item.title)}
+                  ${renderLine("p", "daily-card__subtitle daily-card__line daily-card__line--fade", item.subtitle)}
+                  ${renderLine("p", "daily-card__date daily-card__line daily-card__line--fade", datePlaceLine)}
+                </div>
+              </div>
+            </a>
+          </article>
+        `;
+      })
+      .join("");
+  };
+
+  const dateKey = new Date().toISOString().slice(0, 10);
+  render(pickDaily(items, dateKey, 5));
+</script>

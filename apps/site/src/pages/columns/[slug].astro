@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { readGeneratedArticles, readGeneratedSite } from "@/lib/library-store";
+import { renderArticleMarkdown } from "@/lib/articles";
+
+export async function getStaticPaths() {
+  const articles = await readGeneratedArticles();
+  return articles.map((article) => ({
+    params: {
+      slug: article.slug,
+    },
+    props: {
+      article,
+    },
+  }));
+}
+
+const { article } = Astro.props;
+const site = await readGeneratedSite();
+const contentHtml = renderArticleMarkdown(article.markdown || "");
+---
+
+<BaseLayout title={`${site.title} | ${article.title}`} description={article.summary || article.title}>
+  <div class="container page-section">
+    <section class="section-heading section-heading--centered">
+      <p class="section-heading__eyebrow">Column</p>
+      <h1>{article.title}</h1>
+      {article.summary && <p class="page-lead">{article.summary}</p>}
+    </section>
+
+    <div class="article-body" set:html={contentHtml}></div>
+  </div>
+</BaseLayout>

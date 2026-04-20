@@ -1,0 +1,74 @@
+---
+import EntityInfoPanel from "@/components/EntityInfoPanel.astro";
+import ComposerTreeNode from "@/components/ComposerTreeNode.astro";
+import ExpandableSummary from "@/components/ExpandableSummary.astro";
+import { getDisplayData, getWebsiteDisplay } from "@/lib/display";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { readGeneratedArticles, readGeneratedIndexes, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+
+export async function getStaticPaths() {
+  const library = await readGeneratedLibrary();
+  return library.composers.map((composer) => ({
+    params: {
+      slug: composer.slug,
+    },
+    props: {
+      composer,
+    },
+  }));
+}
+
+const { composer } = Astro.props;
+const [site, library, indexes, articles] = await Promise.all([
+  readGeneratedSite(),
+  readGeneratedLibrary(),
+  readGeneratedIndexes(),
+  readGeneratedArticles(),
+]);
+
+const tree = indexes.composerTree[composer.id];
+const workCount = library.works.filter((work) => work.composerId === composer.id).length;
+const recordingCount = library.recordings.filter((recording) => {
+  const work = library.works.find((item) => item.id === recording.workId);
+  return work?.composerId === composer.id;
+}).length;
+const display = getDisplayData(composer);
+const headingName = getWebsiteDisplay(composer).heading;
+const linkedArticle = articles.find((article) => article.id === composer.infoPanel?.articleId);
+---
+
+<BaseLayout title={`${site.title} | ${headingName}`} description={composer.summary || `${headingName} 的作品类型与推荐版本索引。`}>
+  <div class="container page-section">
+    <section class="section-heading section-heading--centered">
+      <p class="section-heading__eyebrow">Composer</p>
+      <h1>{headingName}</h1>
+      {display.primary && display.primary !== headingName && <p class="page-lead">{display.primary}</p>}
+      {display.latin && <p class="page-note">{display.latin}</p>}
+      <p class="page-note">
+        {composer.country || "国家未注明"}
+        {composer.birthYear ? ` · ${composer.birthYear}${composer.deathYear ? `–${composer.deathYear}` : "–"}` : ""}
+        {` · ${workCount} 部作品 · ${recordingCount} 个推荐版本`}
+      </p>
+    </section>
+
+    {composer.summary && <ExpandableSummary text={composer.summary} className="body-copy" containerClassName="composer-summary" />}
+
+    <EntityInfoPanel infoPanel={composer.infoPanel} article={linkedArticle} />
+
+    <div class="section-divider"></div>
+
+    <section class="tree-panel">
+      <div class="section-heading section-heading--centered section-heading--subsection">
+        <p class="section-heading__eyebrow">Type-First Index</p>
+        <h2>按作品类型浏览</h2>
+        <p class="page-lead">先进入类型层级，再进入具体作品，避免目录扩展后直接铺满曲目与版本。</p>
+      </div>
+
+      {tree?.children?.length ? (
+        tree.children.map((node) => <ComposerTreeNode node={node} />)
+      ) : (
+        <p class="page-note">该作曲家暂未导入作品条目。</p>
+      )}
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,176 @@
+---
+import type { SearchPanelEntry } from "@/lib/search-panel";
+
+interface Props {
+  items: SearchPanelEntry[];
+  intro?: string;
+}
+
+const {
+  items,
+  intro = "未输入时每类保留前 5 条示例；输入并搜索后将按类型展示完整命中结果，并为每类结果提供分页。",
+} = Astro.props;
+---
+
+<section class="search-panel" data-search-panel>
+  <div class="section-heading section-heading--page-intro">
+    <p class="section-heading__eyebrow">Search</p>
+    <h1>搜索索引</h1>
+    <p class="page-lead">{intro}</p>
+  </div>
+
+  <form class="search-panel__controls" data-search-form>
+    <label class="sr-only" for="search-page-input">搜索</label>
+    <input
+      id="search-page-input"
+      data-search-input
+      type="search"
+      name="q"
+      placeholder="输入作曲家、指挥、乐团、作品、版本或专栏名称"
+    />
+  </form>
+
+  <div class="search-panel__results" data-search-results></div>
+</section>
+
+<script define:vars={{ items }} is:inline>
+  window.__SEARCH_PANEL_ITEMS__ = items;
+</script>
+
+<script>
+  import { buildSearchGroups, normalizeSearchQuery, SEARCH_PANEL_KIND_ORDER } from "@/lib/search-panel";
+  import type { SearchPanelEntry } from "@/lib/search-panel";
+
+  declare global {
+    interface Window {
+      __SEARCH_PANEL_ITEMS__?: SearchPanelEntry[];
+    }
+  }
+
+  type SearchPanelGroup = ReturnType<typeof buildSearchGroups>[number];
+  type SearchPanelKind = (typeof SEARCH_PANEL_KIND_ORDER)[number];
+  type SearchPageState = Partial<Record<SearchPanelKind, number>>;
+
+  const items: SearchPanelEntry[] = window.__SEARCH_PANEL_ITEMS__ || [];
+  const container = document.querySelector<HTMLElement>("[data-search-panel]");
+  const form = container?.querySelector<HTMLFormElement>("[data-search-form]");
+  const input = container?.querySelector<HTMLInputElement>("[data-search-input]");
+  const results = container?.querySelector<HTMLElement>("[data-search-results]");
+
+  const labels: Record<SearchPanelKind, string> = {
+    composer: "作曲家",
+    conductor: "指挥",
+    orchestra: "乐团",
+    workGroup: "类型",
+    work: "作品",
+    recording: "版本",
+    article: "专栏",
+    person: "人物",
+  };
+
+  const escapeHtml = (value: unknown) =>
+    String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+
+  const readPageState = (params: URLSearchParams): Record<SearchPanelKind, number> =>
+    Object.fromEntries(
+      SEARCH_PANEL_KIND_ORDER.map((kind) => [kind, Math.max(1, Number(params.get(`page-${kind}`) || 1) || 1)]),
+    ) as Record<SearchPanelKind, number>;
+
+  const buildHref = (query: string, pageByKind: SearchPageState) => {
+    const params = new URLSearchParams();
+    if (query) {
+      params.set("q", query);
+    }
+    for (const [kind, page] of Object.entries(pageByKind || {})) {
+      if (Number(page) > 1) {
+        params.set(`page-${kind}`, String(page));
+      }
+    }
+    const suffix = params.toString();
+    return suffix ? `${window.location.pathname}?${suffix}` : window.location.pathname;
+  };
+
+  const renderPagination = (group: SearchPanelGroup, query: string, pageByKind: SearchPageState) => {
+    if (!normalizeSearchQuery(query) || group.totalPages <= 1) {
+      return "";
+    }
+
+    const prevPage = Math.max(1, group.page - 1);
+    const nextPage = Math.min(group.totalPages, group.page + 1);
+
+    return `
+      <div class="search-group__pagination">
+        <span>第 ${group.page} / ${group.totalPages} 页</span>
+        <div class="search-group__pagination-links">
+          <a href="${escapeHtml(buildHref(query, { ...pageByKind, [group.kind]: prevPage }))}" ${group.page <= 1 ? 'aria-disabled="true"' : ""}>上一页</a>
+          <a href="${escapeHtml(buildHref(query, { ...pageByKind, [group.kind]: nextPage }))}" ${group.page >= group.totalPages ? 'aria-disabled="true"' : ""}>下一页</a>
+        </div>
+      </div>
+    `;
+  };
+
+  const render = () => {
+    if (!results) {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get("q") ?? "";
+    const pageByKind = readPageState(params);
+    const queryActive = Boolean(normalizeSearchQuery(query));
+    const groups = buildSearchGroups(items, query, pageByKind);
+
+    if (input instanceof HTMLInputElement) {
+      input.value = query;
+    }
+
+    if (!groups.length) {
+      results.innerHTML = '<p class="page-note">没有找到匹配项。</p>';
+      return;
+    }
+
+    results.innerHTML = groups
+      .map((group) => {
+        const rows = group.items
+          .map(
+            (entry) => `
+              <li class="search-result">
+                <a href="${escapeHtml(entry.href)}">
+                  <strong>${escapeHtml(entry.primaryText)}</strong>
+                  <span>${escapeHtml(entry.secondaryText ?? "")}</span>
+                </a>
+              </li>
+            `,
+          )
+          .join("");
+
+        return `
+          <section class="search-group">
+            <div class="search-group__header">
+              <h2>${labels[group.kind]}</h2>
+              <span>${group.items.length} / ${group.totalItems}</span>
+            </div>
+            <ul>${rows}</ul>
+            ${queryActive ? renderPagination(group, query, pageByKind) : ""}
+          </section>
+        `;
+      })
+      .join("");
+  };
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+    const query = input.value.trim();
+    window.location.assign(buildHref(query, {}));
+  });
+
+  window.addEventListener("popstate", render);
+  render();
+</script>

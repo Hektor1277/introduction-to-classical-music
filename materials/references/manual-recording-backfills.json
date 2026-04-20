@@ -1,0 +1,151 @@
+[
+  {
+    "recordingId": "recording-第九交响曲合唱-伯恩斯坦1989",
+    "notes": "1989 柏林自由音乐会并非单一常设乐团与合唱团，按公开节目单拆分为参与的正式乐团与合唱团条目，以保留该场联合编制信息。",
+    "sources": [
+      "Bernstein in Berlin"
+    ],
+    "removeCredits": [
+      {
+        "role": "ensemble",
+        "displayName": "柏林自由音乐会联合乐团"
+      },
+      {
+        "role": "chorus",
+        "displayName": "柏林自由音乐会联合合唱团"
+      }
+    ],
+    "credits": [
+      {
+        "role": "orchestra",
+        "personId": "person-symphonieorchester-des-bayerischen-rundfunks",
+        "displayName": "巴伐利亚广播交响乐团",
+        "label": "联合乐团成员"
+      },
+      {
+        "role": "orchestra",
+        "personId": "person-orchestra-sachsische-staatskapelle-dresden",
+        "displayName": "德累斯顿交响乐团",
+        "label": "联合乐团成员"
+      },
+      {
+        "role": "orchestra",
+        "personId": "person-orchestra-orchestra-of-the-kirov-theatre",
+        "displayName": "基洛夫剧院管弦乐团",
+        "label": "联合乐团成员"
+      },
+      {
+        "role": "orchestra",
+        "personId": "person-orchestra-london-symphony-orchestra",
+        "displayName": "伦敦交响乐团",
+        "label": "联合乐团成员"
+      },
+      {
+        "role": "orchestra",
+        "personId": "person-new-york-philharmonic",
+        "displayName": "纽约爱乐乐团",
+        "label": "联合乐团成员"
+      },
+      {
+        "role": "orchestra",
+        "personId": "person-orchestra-orchestre-de-paris",
+        "displayName": "巴黎管弦乐团",
+        "label": "联合乐团成员"
+      },
+      {
+        "role": "chorus",
+        "personId": "person-chorus-bavarian-radio-chorus",
+        "displayName": "巴伐利亚广播合唱团",
+        "label": "联合合唱成员"
+      },
+      {
+        "role": "chorus",
+        "personId": "person-chorus-chorus-of-radio-berlin",
+        "displayName": "柏林广播合唱团",
+        "label": "联合合唱成员"
+      },
+      {
+        "role": "chorus",
+        "personId": "person-chorus-dresden-philharmonic-childrens-chorus",
+        "displayName": "德累斯顿爱乐童声合唱团",
+        "label": "联合合唱成员"
+      }
+    ]
+  },
+  {
+    "recordingId": "recording-d大调小提琴协奏曲-马宁-and-杰拉伯特1916",
+    "notes": "按人工确认，本条目继续复用“巴塞罗那交响乐团”，规范原文名定为 Orquesta Sinfónica de Barcelona。",
+    "sources": [
+      "Concert de Juan Manén (10 Desembre 1916)"
+    ],
+    "credits": [
+      {
+        "role": "orchestra",
+        "personId": "person-orchestra-巴塞罗那交响乐团",
+        "displayName": "巴塞罗那交响乐团",
+        "label": "乐团"
+      }
+    ]
+  },
+  {
+    "recordingId": "recording-d小调小提琴协奏曲-伊格内修斯-and-施内沃伊特1945",
+    "notes": "HKO & RO 为联合署名，可安全拆分为赫尔辛基爱乐乐团与芬兰广播乐团；其中芬兰广播乐团条目以 Finnish Radio Symphony Orchestra 为规范原文名，并保留历史原名 Radio-orkesteri 作为别名。",
+    "sources": [
+      "Yle Living Archive: Schnéevoigt, Ignatius ja kaksi orkesteria"
+    ],
+    "removeCredits": [
+      {
+        "role": "orchestra",
+        "displayName": "HKO & RO"
+      },
+      {
+        "role": "soloist",
+        "personId": "person-georg-schne-evoigt-乔治施内沃伊特"
+      }
+    ],
+    "credits": [
+      {
+        "role": "orchestra",
+        "displayName": "赫尔辛基爱乐乐团",
+        "label": "乐团"
+      },
+      {
+        "role": "orchestra",
+        "personId": "person-orchestra-芬兰广播乐团",
+        "displayName": "芬兰广播乐团",
+        "label": "乐团"
+      }
+    ]
+  },
+  {
+    "recordingId": "recording-a小调钢琴协奏曲-维尔萨拉泽-and-鲁丁",
+    "notes": "原始 HTML 仅给出指挥亚历山大·鲁丁与地点“莫斯科音乐学院大音乐厅”，并未给出第二独奏者；当前“鲁丁”独奏 credit 为文件名误补，需移除，同时本条人工确认乐团未知，不再继续追补。",
+    "sources": [
+      "archive HTML: 维尔萨拉泽&鲁丁.htm",
+      "user confirmation: 2026-03-24 manual checklist"
+    ],
+    "removeCredits": [
+      {
+        "role": "soloist",
+        "personId": "person-鲁丁"
+      }
+    ],
+    "metadata": {
+      "performanceDateText": "",
+      "venueText": "莫斯科音乐学院大音乐厅"
+    },
+    "waivedMissingRoles": [
+      "orchestra_or_ensemble"
+    ]
+  },
+  {
+    "recordingId": "recording-a小调钢琴协奏曲-福斯特-1953",
+    "notes": "人工确认该条目录音无法可靠补出乐团或合奏信息，保留未知状态，不再继续追补。",
+    "sources": [
+      "user confirmation: 2026-03-24 manual checklist"
+    ],
+    "waivedMissingRoles": [
+      "orchestra_or_ensemble"
+    ]
+  }
+]

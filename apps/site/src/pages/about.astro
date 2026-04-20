@@ -1,0 +1,51 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { readGeneratedIndexes, readGeneratedSite } from "@/lib/library-store";
+
+const [site, indexes] = await Promise.all([readGeneratedSite(), readGeneratedIndexes()]);
+const statItems = [
+  ["作曲家", indexes.stats.composerCount],
+  ["作品", indexes.stats.workCount],
+  ["推荐版本", indexes.stats.recordingCount],
+  ["指挥", indexes.stats.conductorCount],
+  ["乐团", indexes.stats.orchestraCount],
+];
+---
+
+<BaseLayout title={`${site.title} | 关于`} description="关于本站和联系方式。">
+  <div class="container page-section page-section--plain">
+    <div class="section-heading section-heading--page-intro">
+      <p class="section-heading__eyebrow">About</p>
+      <h1>关于本站</h1>
+      <p class="page-lead">{site.description}</p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <section class="about-stats">
+      <h2>收录概况</h2>
+      <dl class="stats-list">
+        {statItems.map(([label, value]) => (
+          <div>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="page-note">最近导入：{site.lastImportedAt ? site.lastImportedAt.slice(0, 10) : "尚未导入"}</p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <div class="section-stack section-stack--tight">
+      {site.about.map((paragraph) => (
+        <p class="body-copy">{paragraph}</p>
+      ))}
+
+      <section class="line-entry">
+        <h2>联系方式</h2>
+        <p>{site.contact.label}：{site.contact.value}</p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

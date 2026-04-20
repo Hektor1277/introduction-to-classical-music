@@ -1,0 +1,62 @@
+---
+import DirectoryBrowser from "@/components/DirectoryBrowser.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildPersonDirectoryEntry } from "@/lib/directory";
+import { loadPersonLinks, readGeneratedIndexes, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+
+function resolveCanonicalId(personId: string, personLinks: { canonicalPersonLinks: Record<string, string> }) {
+  const seen = new Set<string>();
+  let current = personId;
+  while (personLinks.canonicalPersonLinks[current] && !seen.has(current)) {
+    seen.add(current);
+    current = personLinks.canonicalPersonLinks[current];
+  }
+  return current;
+}
+
+const [site, library, indexes, personLinks] = await Promise.all([
+  readGeneratedSite(),
+  readGeneratedLibrary(),
+  readGeneratedIndexes(),
+  loadPersonLinks(),
+]);
+
+const recordingMap = new Map(library.recordings.map((recording) => [recording.id, recording]));
+const conductors = library.people.filter(
+  (person) => person.roles.includes("conductor") && resolveCanonicalId(person.id, personLinks) === person.id,
+);
+
+const entries = conductors.map((person) => {
+  const entry = indexes.conductorIndex[person.id];
+  const representativeWorks = entry
+    ? entry.groups.flatMap((group) => group.works.map((work) => work.title)).slice(0, 4)
+    : [];
+  const leadRecording = entry?.groups[0]?.works[0]?.recordings[0]
+    ? recordingMap.get(entry.groups[0].works[0].recordings[0].id)
+    : undefined;
+  const avatarSrc = person.avatarSrc || leadRecording?.images[0]?.src || "";
+
+  return buildPersonDirectoryEntry(
+    {
+      ...person,
+      avatarSrc,
+    },
+    {
+      href: `/conductors/${person.slug}/`,
+      representativeWorks,
+    },
+  );
+});
+---
+
+<BaseLayout title={`${site.title} | 指挥`} description="按姓氏、出生年份或国家浏览指挥目录。">
+  <div class="container page-section page-section--plain">
+    <DirectoryBrowser
+      eyebrow="Conductors"
+      title="指挥目录"
+      intro={site.conductorDirectoryIntro}
+      entries={entries}
+      emptyMessage="暂无指挥条目。"
+    />
+  </div>
+</BaseLayout>

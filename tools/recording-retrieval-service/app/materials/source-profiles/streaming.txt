@@ -1,0 +1,33 @@
+# streaming 资源平台总表
+# 用法：
+# 1. 使用 #section-name 开始一个分组，例如 #global、#orchestral、#live。
+# 2. 一行一个 hostname 或完整 URL，越靠上优先级越高。
+# 3. 本文件用于寻找可访问的资源链接，不作为事实权威来源。
+# 4. 加载顺序固定为：global -> 曲目类型 -> 标签类型。
+# 5. 如果某个平台更适合现场版、钢琴类或某个体裁，可以写到对应分组。
+# 6. 中文平台请在 URL 前添加 [zh] 标记。
+#    例如：[zh] https://www.bilibili.com
+#    标记后系统会优先使用中文关键词，再使用 Latin 关键词，最后尝试混合关键词。
+# 7. 未标记 [zh] 的平台会被视为非中文平台，只使用 Latin 关键词或既有英文查询规则。
+
+#global
+[zh] https://www.bilibili.com
+https://www.youtube.com
+https://classical.music.apple.com
+https://music.apple.com
+https://open.spotify.com
+https://www.qobuz.com
+
+#orchestral
+
+#concerto
+
+#opera_vocal
+
+#chamber_solo
+
+#live
+
+#piano
+
+#violin

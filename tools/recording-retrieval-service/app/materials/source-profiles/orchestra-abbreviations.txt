@@ -1,0 +1,189 @@
+BaSO = Bamberger Symphoniker
+
+BeSO = Berliner Sinfonie-Orchester
+
+BBCSO = BBC Symphony Orchestra
+
+BBCSSO = BBC Scottish Symphony Orchestra
+
+BPO = Berliner Philharmoniker
+
+BRSO = Symphonie-Orchester des Bayerischen Rundfunks
+
+BSO = Boston Symphony Orchestra
+
+BSOO = Bayerisches Staatsorchester = Bavarian State Opera Orchestra
+
+CBSO = City of Birmingham Symphony Orchestra
+
+CoSO = Columbia Symphony Orchestra
+
+CSO = Chicago Symphony Orchestra
+
+CzPO = Czech Philharmonic Orchestra
+
+DPO = Dresdner Philharmonie
+
+DRP = Deutsche Radio Philharmonie Saarbrücken Kaiserslautern
+
+DRSO = Danmarks Radios Symfoniorkester = DR RadioSymfoniOrkestret = DR SymfoniOrkestret
+
+DSO = Detroit Symphony Orchestra
+
+DSOB = Deutsches Symphonie-Orchester Berlin
+
+FRSO = Finnish Radio Symphony Orchestra
+
+GMJO = Gustav Mahler Jugendorchester
+
+GOK = Gürzenich-Orchester Köln
+
+GSO = Göteborgs Symfoniker
+
+HGO = Het Gelders Orkest = Arnhem Philharmonic Orchestra
+
+HNPO = Hungarian National Philharmonic Orchestra = Hungarian State Orchestra
+
+HO = Hallé Orchestra
+
+HPO = Helsinki Philharmonic Orchestra
+
+HRSO = hr-Sinfonieorchester = Radio-Sinfonie-Orchester Frankfurt = Sinfonie-Orchester des Hessischen Rundfunks = Frankfurter Rundfunk-Symphonie-Orchester
+
+JDP = Junge Deutsche Philharmonie
+
+JPO = Japan Philharmonic Orchestra
+
+KOB = Konzerthausorchester Berlin
+
+KRSO = Kölner Rundfunk-Sinfonie-Orchester
+
+LAPO = Los Angeles Philharmonic
+
+LePO = Leningrad Philharmonic Orchestra
+
+LGO = Gewandhausorchester Leipzig
+
+LPO = London Philharmonic Orchestra
+
+LRSO = Rundfunk-Sinfonieorchester Leipzig
+
+LSO = London Symphony Orchestra
+
+LzSO = Luzerner Sinfonieorchester
+
+MDR = MDR-Sinfonieorchester
+
+MnSO = Minneapolis Symphony Orchestra
+
+MO = Minnesota Orchestra
+
+MPO = Münchner Philharmoniker
+
+MRSO = Moscow Radio Symphony Orchestra = USSR State Radio and Television Symphony Orchestra = USSR All-Union National Radio and Central Television Symphony Orchestra
+
+NBCSO = NBC Symphony Orchestra
+
+NDR = NDR Sinfonieorchester = NDR Elbphilharmonie Orchester
+
+NePO = Nederlands Philharmonisch Orkest = Netherlands Philharmonic Orchestra
+
+NHKSO = NHK Symphony Orchestra
+
+NJPO = New Japan Philharmonic
+
+NPO = New Philharmonia Orchestra
+
+NWDR = NWDR-Sinfonieorchester
+
+NYPO = New York Philharmonic
+
+NYPSO = Philharmonic-Symphony Orchestra of New York
+
+ONF = Orchestre National de France
+
+OP = Orchestre de Paris
+
+OPMC = Orchestre Philharmonique de Monte-Carlo = Orchestre National de l'Opéra de Monte-Carlo
+
+OPRF = Orchestre philharmonique de Radio France
+
+ORR = Orchestre Révolutionnaire et Romantique
+
+ORTF = Orchestre National de la R.T.F. = Orchestre National de l'ORTF
+
+OSCC = Orchestre de la Société des Concerts du Conservatoire
+
+OSM = Orchestre symphonique de Montréal
+
+OSR = Orchestre de la Suisse Romande
+
+PO = Philharmonia Orchestra
+
+PpO = The Philadelphia Orchestra
+
+PSO = Pittsburgh Symphony Orchestra
+
+PSH = Philharmonisches Staatsorchester Hamburg
+
+RCO = Concertgebouworkest
+
+RFO = Radio Filharmonisch Orkest = Netherlands Radio Philharmonic Orchestra
+
+RIAS = RIAS-Symphonie-Orchester
+
+RLPO = Royal Liverpool Philharmonic
+
+RO = Residentie Orkest = The Hague Philharmonic
+
+RPO = Royal Philharmonic Orchestra
+
+RaSB = Radio-Symphonie-Orchester Berlin
+
+RSB = Rundfunk-Sinfonieorchester Berlin
+
+RSOL = Rundfunk-Sinfonie-Orchester Leipzig
+
+RSSa = Rundfunk-Sinfonieorchester Saarbrücken
+
+RSStu = Radio-Sinfonieorchester Stuttgart = Südfunk-Sinfonieorchester
+
+SCO = Scottish Chamber Orchestra
+
+SFSO = San Francisco Symphony
+
+SKB = Staatskapelle Berlin
+
+SKD = Staatskapelle Dresden
+
+SPPO = Saint Petersburg Philharmonic Orchestra
+
+SRSO = Sveriges Radios Symfoniorkester = Swedish Radio Symphony Orchestra
+
+SWF = Sinfonieorchester des Südwestfunks = SWR Sinfonieorchester Baden-Baden und Freiburg
+
+SWR = SWR Symphonieorchester
+
+TCO = The Cleveland Orchestra
+
+TMSO = Tokyo Metropolitan Symphony Orchestra
+
+TO = Tonkünstler-Orchester
+
+TorSO = Toronto Symphony Orchestra
+
+TOZ = Tonhalle-Orchester Zürich
+
+TSO = Tokyo Symphony Orchestra\
+
+USSO = USSR State Symphony Orchestra
+
+VPO = Wiener Philharmoniker
+
+VSO = Wiener Symphoniker
+
+VSOO = Orchester der Wiener Staatsoper
+
+WDR = WDR Sinfonieorchester Köln
+
+YNSO = Yomiuri Nippon Symphony Orchestra
