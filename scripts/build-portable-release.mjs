@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -6,7 +6,8 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
-const outputDir = path.join(repoRoot, "output", "releases");
+const outputDir = path.join(repoRoot, "output", "releases-portable");
+const portableSiteStageDir = path.join(repoRoot, "output", "portable-site-staging");
 const tempConfigPath = path.join(outputDir, "electron-builder-portable.json");
 const electronBuilderBin = path.join(
   repoRoot,
@@ -14,6 +15,10 @@ const electronBuilderBin = path.join(
   ".bin",
   process.platform === "win32" ? "electron-builder.cmd" : "electron-builder",
 );
+
+const portableSiteSourceDir = process.env.ICM_PORTABLE_SITE_SOURCE_DIR
+  ? path.resolve(process.env.ICM_PORTABLE_SITE_SOURCE_DIR)
+  : path.join(repoRoot, "output", "site");
 
 const portableConfig = {
   extends: null,
@@ -31,7 +36,7 @@ const portableConfig = {
     "output/runtime/apps/desktop/**/*",
     "output/runtime/packages/**/*",
     "output/runtime/scripts/**/*",
-    "output/site/**/*",
+    "output/portable-site-staging/**/*",
     "!**/*.map",
     "!**/tests/**/*",
     "!**/docs/**/*",
@@ -63,6 +68,8 @@ const portableConfig = {
 };
 
 await mkdir(outputDir, { recursive: true });
+await rm(portableSiteStageDir, { recursive: true, force: true });
+await cp(portableSiteSourceDir, portableSiteStageDir, { recursive: true, force: true });
 await writeFile(tempConfigPath, `${JSON.stringify(portableConfig, null, 2)}\n`, "utf8");
 
 const args = ["--config", tempConfigPath, "--win", "portable", "zip", "--publish", "never"];

@@ -5,8 +5,9 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
-const releasesRoot = path.join(repoRoot, "output", "releases");
+const releasesRoot = path.join(repoRoot, "output", "releases-portable");
 const distRoot = path.join(repoRoot, "dist");
+const portableSiteStageRoot = path.join(repoRoot, "output", "portable-site-staging");
 const packageJson = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
 const version = packageJson.version;
 
@@ -15,6 +16,7 @@ const targets = [
   path.join(releasesRoot, "builder-debug.yml"),
   path.join(releasesRoot, `BuQuanShu-Portable-${version}.exe`),
   path.join(releasesRoot, `BuQuanShu-Portable-${version}.zip`),
+  portableSiteStageRoot,
   path.join(distRoot, "win-unpacked"),
   path.join(distRoot, "builder-debug.yml"),
   path.join(distRoot, `BuQuanShu-Portable-${version}.exe`),

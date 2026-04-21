@@ -25,6 +25,8 @@ describe("desktop shell scaffolding", () => {
     expect(JSON.stringify(packageJson.build?.win?.target || [])).not.toContain("portable");
     expect(portableBuildScript).toContain('artifactName: "BuQuanShu-Portable-${version}.${ext}"');
     expect(portableBuildScript).toContain('"!**/tools/**/*"');
+    expect(portableBuildScript).toContain("output/portable-site-staging/**/*");
+    expect(portableBuildScript).toContain("ICM_PORTABLE_SITE_SOURCE_DIR");
     expect(portableBuildScript).toContain('from: "scripts/portable-release.marker"');
     expect(portableBuildScript).not.toContain("recording-retrieval-service/app/dist/portable");
     expect(portableBuildScript).toContain('target: ["portable", "zip"]');
@@ -97,6 +99,7 @@ describe("desktop shell scaffolding", () => {
     const cleanRelease = await fs.readFile(path.resolve("scripts/clean-desktop-release.mjs"), "utf8");
     const patchReleaseIcons = await fs.readFile(path.resolve("scripts/patch-release-icons.mjs"), "utf8");
     expect(cleanPortableRelease).toContain("Cleaned portable release output");
+    expect(cleanPortableRelease).toContain("releases-portable");
     expect(cleanRelease).toContain("Cleaned desktop release output");
     expect(afterPack).toContain('import * as ResEdit from "resedit"');
     expect(portableAfterPack).toContain('import * as ResEdit from "resedit"');
