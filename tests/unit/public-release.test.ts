@@ -85,8 +85,8 @@ describe("public release repository", () => {
       fs.readdir(path.resolve("data/automation/runs")),
     ]);
 
-    expect(batchEntries).toEqual([]);
-    expect(runEntries).toEqual([]);
+    expect(batchEntries.filter((entry) => entry !== ".gitkeep")).toEqual([]);
+    expect(runEntries.filter((entry) => entry !== ".gitkeep")).toEqual([]);
     await expect(fs.access(path.resolve("data/automation/settings.local.json"))).rejects.toThrow();
     await expect(fs.access(path.resolve("data/automation/recording-retrieval.local.json"))).rejects.toThrow();
   });
