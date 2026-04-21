@@ -2,7 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
 import type { OpenDialogOptions } from "electron";
 import { spawn, type ChildProcess } from "node:child_process";
 import { once } from "node:events";
-import { appendFileSync, mkdirSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync } from "node:fs";
 import { access, readFile, stat } from "node:fs/promises";
 import net from "node:net";
 import path from "node:path";
@@ -47,6 +47,7 @@ const launcherHtmlPath = path.resolve(runtimeRootDir, "apps", "desktop", "launch
 const desktopPreloadPath = path.resolve(shellRootDir, "output", "runtime", "apps", "desktop", "preload.js");
 const desktopAssetDir = path.resolve(shellRootDir, "apps", "desktop", "assets");
 const packagedPortableSiteDir = path.resolve(shellRootDir, "output", "site");
+const portableReleaseMarkerPath = app.isPackaged ? path.join(process.resourcesPath, "portable-release.marker") : "";
 const desktopIconPath = path.resolve(
   desktopAssetDir,
   process.platform === "win32" ? "app-icon.ico" : "app-icon.png",
@@ -87,7 +88,7 @@ function resolvePreferredDefaultLibraryDir() {
 }
 
 function isPortableRuntime() {
-  return Boolean(process.env.PORTABLE_EXECUTABLE_DIR || process.env.PORTABLE_EXECUTABLE_FILE);
+  return Boolean(process.env.PORTABLE_EXECUTABLE_DIR || process.env.PORTABLE_EXECUTABLE_FILE || (app.isPackaged && existsSync(portableReleaseMarkerPath)));
 }
 
 function primeRuntimeEnvironment() {

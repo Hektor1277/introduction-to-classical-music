@@ -92,6 +92,7 @@
     "owner": "npm run assets:prepare && npm run runtime:build && node output/runtime/apps/owner/server/owner-app.js",
     "desktop:dev": "npm run assets:prepare && npm run runtime:build && electron .",
     "desktop:dist": "node scripts/clean-desktop-release.mjs && npm run build && npm run retrieval:portable:build && electron-builder --win nsis && node scripts/patch-release-icons.mjs",
+    "desktop:portable:build": "node scripts/clean-portable-release.mjs && npm run build && node scripts/build-portable-release.mjs",
     "package:windows": "npm run doctor:windows && npm run desktop:dist",
     "astro:check": "node --max-old-space-size=8192 node_modules/astro/astro.js check --root apps/site",
     "check": "npm run assets:prepare && npm run audit:text && npm run entity-vitals:audit && npm run astro:check && vitest run",

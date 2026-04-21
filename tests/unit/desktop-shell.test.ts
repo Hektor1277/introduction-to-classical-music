@@ -5,10 +5,13 @@ import path from "node:path";
 describe("desktop shell scaffolding", () => {
   it("declares the Electron entrypoint and packaging scripts", async () => {
     const packageJson = JSON.parse(await fs.readFile(path.resolve("package.json"), "utf8"));
+    const portableBuildScript = await fs.readFile(path.resolve("scripts/build-portable-release.mjs"), "utf8");
 
     expect(packageJson.main).toBe("output/runtime/apps/desktop/main.js");
     expect(packageJson.scripts["desktop:dev"]).toContain("electron");
     expect(packageJson.scripts["desktop:dist"]).toContain("electron-builder");
+    expect(packageJson.scripts["desktop:portable:build"]).toContain("clean-portable-release.mjs");
+    expect(packageJson.scripts["desktop:portable:build"]).toContain("build-portable-release.mjs");
     expect(packageJson.scripts["desktop:dist"]).toContain("npm run build");
     expect(packageJson.scripts["desktop:dist"]).toContain("retrieval:portable:build");
     expect(packageJson.scripts["desktop:dist"]).toContain("clean-desktop-release.mjs");
@@ -20,6 +23,12 @@ describe("desktop shell scaffolding", () => {
     expect(packageJson.build?.win?.signAndEditExecutable).toBe(false);
     expect(JSON.stringify(packageJson.build?.win?.target || [])).toContain("nsis");
     expect(JSON.stringify(packageJson.build?.win?.target || [])).not.toContain("portable");
+    expect(portableBuildScript).toContain('artifactName: "BuQuanShu-Portable-${version}.${ext}"');
+    expect(portableBuildScript).toContain('"!**/tools/**/*"');
+    expect(portableBuildScript).toContain('from: "scripts/portable-release.marker"');
+    expect(portableBuildScript).not.toContain("recording-retrieval-service/app/dist/portable");
+    expect(portableBuildScript).toContain('target: ["portable", "zip"]');
+    expect(portableBuildScript).toContain("--config");
   });
 
   it("includes launcher actions, library management hooks, and IPC bridges", async () => {
@@ -76,17 +85,23 @@ describe("desktop shell scaffolding", () => {
     expect(mainProcess).toContain("migrateLegacyInstalledLibraryIfNeeded");
     expect(mainProcess).toContain("seedFromLegacy: false");
     expect(mainProcess).toContain("PORTABLE_EXECUTABLE_DIR");
+    expect(mainProcess).toContain("portable-release.marker");
     expect(mainProcess).toContain("openPortableLibrarySite");
     expect(mainProcess).toContain(".icm-build-meta.json");
     expect(mainProcess).toContain("module pre-window setup");
     expect(mainProcess).toContain('import("../../packages/data-core/src/library-manager.js")');
 
     const afterPack = await fs.readFile(path.resolve("scripts/electron-after-pack.mjs"), "utf8");
+    const portableAfterPack = await fs.readFile(path.resolve("scripts/electron-after-pack-portable.mjs"), "utf8");
+    const cleanPortableRelease = await fs.readFile(path.resolve("scripts/clean-portable-release.mjs"), "utf8");
     const cleanRelease = await fs.readFile(path.resolve("scripts/clean-desktop-release.mjs"), "utf8");
     const patchReleaseIcons = await fs.readFile(path.resolve("scripts/patch-release-icons.mjs"), "utf8");
+    expect(cleanPortableRelease).toContain("Cleaned portable release output");
     expect(cleanRelease).toContain("Cleaned desktop release output");
     expect(afterPack).toContain('import * as ResEdit from "resedit"');
+    expect(portableAfterPack).toContain('import * as ResEdit from "resedit"');
     expect(afterPack).toContain("replaceIconsForResource");
+    expect(portableAfterPack).toContain("replaceIconsForResource");
     expect(afterPack).toContain("IconGroupEntry.fromEntries");
     expect(patchReleaseIcons).toContain('import * as ResEdit from "resedit"');
     expect(patchReleaseIcons).toContain("Patched unpacked release icons");

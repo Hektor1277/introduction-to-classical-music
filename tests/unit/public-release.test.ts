@@ -18,6 +18,7 @@ describe("public release repository", () => {
     expect(scripts["doctor:windows"]).toContain("doctor-windows");
     expect(scripts["package:windows"]).toContain("desktop:dist");
     expect(scripts["package:windows"]).toContain("doctor:windows");
+    expect(scripts["desktop:portable:build"]).toContain("build-portable-release");
     expect(JSON.stringify(win.target || [])).toContain("nsis");
     expect(JSON.stringify(win.target || [])).not.toContain("portable");
     expect((build as Record<string, unknown>).executableName).toBe("不全书");
