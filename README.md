@@ -35,12 +35,12 @@
 
 ### 3. Windows 便携版
 
-适合临时试用、演示，或不希望执行安装流程的用户。
+古典导聆不全书离线版，与网页端内容一致。
 
 - 在 [Releases](https://github.com/Hektor1277/introduction-to-classical-music/releases) 下载：
   - `BuQuanShu-Portable-0.1.0.exe`
   - `BuQuanShu-Portable-0.1.0.zip`
-- 便携版打开后直接进入站点界面，而不是启动器
+- 便携版打开后直接进入不全书站点界面
 - 单文件 `EXE` 首次启动会略慢，因为它需要先自解压
 - `ZIP` 解压后运行通常更快
 
