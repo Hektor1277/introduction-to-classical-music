@@ -1,8 +1,1 @@
-key1:
-https://api.deepseek.com/v1
-sk-f7feb1bc8644461b82b19314c59f8e3b
-deepseek-reasoner
-key2:
-https://api.deepseek.com/v1
-sk-bc7393f5a54b4c1c8ee3d90cc855c91a
-deepseek-chat
+*here to set the LLM config*
