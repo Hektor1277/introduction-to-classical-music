@@ -87,6 +87,11 @@ npm run build
 npm run package:windows
 ```
 
+说明：
+
+- 该命令只做本地打包校验，不会自动发布 GitHub Release
+- 公共 Release 由 GitHub Actions 在推送 `v*` Tag（如 `v0.1.1`）时自动发布
+
 ### 方式三：便携版使用
 
 1. 打开 [Releases](https://github.com/Hektor1277/introduction-to-classical-music/releases)
