@@ -1,4 +1,4 @@
-import { cp, mkdir, rm } from "node:fs/promises";
+import { cp, mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { buildLibrarySite } from "../packages/data-core/src/site-build-runner.js";
@@ -28,6 +28,7 @@ async function main() {
   await rm(outputSiteDir, { recursive: true, force: true });
   await mkdir(path.dirname(outputSiteDir), { recursive: true });
   await cp(result.outputDir, outputSiteDir, { recursive: true, force: true });
+  await writeFile(path.join(outputSiteDir, ".nojekyll"), "", "utf8");
 
   process.stdout.write(`Built site into ${outputSiteDir}\n`);
 }
