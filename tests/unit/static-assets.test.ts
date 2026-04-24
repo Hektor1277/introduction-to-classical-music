@@ -13,8 +13,8 @@ describe("static assets wiring", () => {
     const searchPage = await fs.readFile(path.resolve("apps/site/src/pages/search.astro"), "utf8");
     const homePage = await fs.readFile(path.resolve("apps/site/src/pages/index.astro"), "utf8");
 
-    expect(siteLayout).toContain('href="/favicon.ico"');
-    expect(siteLayout).toContain('href="/favicon.svg"');
+    expect(siteLayout).toContain('withBasePath("/favicon.ico")');
+    expect(siteLayout).toContain('withBasePath("/favicon.svg")');
     expect(ownerIndex).toContain('href="/favicon.ico"');
     expect(ownerIndex).toContain('href="/favicon.svg"');
     expect(ownerIndex).toContain('name="composerDirectoryIntro"');

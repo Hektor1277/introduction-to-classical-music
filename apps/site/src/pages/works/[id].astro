@@ -4,6 +4,7 @@ import ExpandableSummary from "@/components/ExpandableSummary.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildRecordingListEntry, getWebsiteDisplay } from "@/lib/display";
 import { readGeneratedArticles, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { withBasePath } from "@/lib/site-base";
 import { resolveSiteImageSrc } from "@/lib/site-assets";
 
 export async function getStaticPaths() {
@@ -73,7 +74,7 @@ const recordings = library.recordings
           {recordings.map((recording) => (
             <article class="work-recording">
               {recording.imageSrc ? (
-                <a class="work-recording__thumb-link" href={`/recordings/${recording.id}/`}>
+                <a class="work-recording__thumb-link" href={withBasePath(`/recordings/${recording.id}/`)}>
                   <img class="work-recording__thumb" src={recording.imageSrc} alt={recording.title} loading="lazy" />
                 </a>
               ) : (
@@ -81,7 +82,7 @@ const recordings = library.recordings
               )}
 
               <div class="work-recording__body">
-                <h3><a href={`/recordings/${recording.id}/`}>{recording.cardTitle}</a></h3>
+                <h3><a href={withBasePath(`/recordings/${recording.id}/`)}>{recording.cardTitle}</a></h3>
                 {recording.cardSecondaryText && <p class="page-note">{recording.cardSecondaryText}</p>}
                 {recording.cardMetaText && <p class="page-note">{recording.cardMetaText}</p>}
                 {recording.cardNoteExcerpt && <p>{recording.cardNoteExcerpt}</p>}

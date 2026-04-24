@@ -18,6 +18,10 @@ afterEach(async () => {
     servers.splice(0).map(
       (server) =>
         new Promise((resolve, reject) => {
+          if (!server.listening) {
+            resolve(undefined);
+            return;
+          }
           server.close((error) => (error ? reject(error) : resolve(undefined)));
         }),
     ),
@@ -37,7 +41,23 @@ describe("dev process manager helpers", () => {
   it("skips occupied ports when choosing the next available dev port", async () => {
     const busyServer = http.createServer((_request, response) => response.end("ok"));
     servers.push(busyServer);
-    await new Promise<void>((resolve) => busyServer.listen(4551, "127.0.0.1", () => resolve()));
+    await new Promise<void>((resolve, reject) => {
+      busyServer.once("error", reject);
+      busyServer.listen(4551, "127.0.0.1", () => {
+        busyServer.off("error", reject);
+        resolve();
+      });
+    }).catch((error) => {
+      const code = error instanceof Error && "code" in error ? String(error.code) : "";
+      if (code === "EPERM") {
+        return;
+      }
+      throw error;
+    });
+
+    if (!busyServer.listening) {
+      return;
+    }
 
     await expect(findAvailablePort(4551, { maxAttempts: 5 })).resolves.toBe(4552);
   });

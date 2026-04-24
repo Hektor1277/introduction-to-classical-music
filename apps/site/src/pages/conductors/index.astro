@@ -3,6 +3,7 @@ import DirectoryBrowser from "@/components/DirectoryBrowser.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildPersonDirectoryEntry } from "@/lib/directory";
 import { loadPersonLinks, readGeneratedIndexes, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { withBasePath } from "@/lib/site-base";
 
 function resolveCanonicalId(personId: string, personLinks: { canonicalPersonLinks: Record<string, string> }) {
   const seen = new Set<string>();
@@ -42,7 +43,7 @@ const entries = conductors.map((person) => {
       avatarSrc,
     },
     {
-      href: `/conductors/${person.slug}/`,
+      href: withBasePath(`/conductors/${person.slug}/`),
       representativeWorks,
     },
   );

@@ -1,4 +1,6 @@
 ---
+import { withBasePath } from "@/lib/site-base";
+
 interface TreeWork {
   id: string;
   title: string;
@@ -23,7 +25,7 @@ const { node } = Astro.props;
 <section id={node.id} class="tree-node">
   <details open>
     <summary>
-      <a href={node.href}>{node.title}</a>
+      <a href={withBasePath(node.href)}>{node.title}</a>
     </summary>
 
     {node.children.length > 0 && (
@@ -37,7 +39,7 @@ const { node } = Astro.props;
     {node.works.length > 0 && (
       <ul class="tree-node__works">
         {node.works.map((work) => (
-          <li><a href={work.href}>{work.title}</a></li>
+          <li><a href={withBasePath(work.href)}>{work.title}</a></li>
         ))}
       </ul>
     )}

@@ -1,6 +1,7 @@
 ---
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
+import { withBasePath } from "@/lib/site-base";
 import "@/styles/global.css";
 
 interface Props {
@@ -18,9 +19,9 @@ const { title, description = "" } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" href={withBasePath("/favicon.ico")} sizes="any" />
+    <link rel="icon" type="image/svg+xml" href={withBasePath("/favicon.svg")} />
+    <link rel="shortcut icon" href={withBasePath("/favicon.ico")} />
   </head>
   <body>
     <SiteHeader />

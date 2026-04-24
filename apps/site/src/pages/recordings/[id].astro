@@ -4,6 +4,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildRecordingDisplayModel, getDisplayData, getWebsiteDisplay } from "@/lib/display";
 import { readGeneratedArticles, readGeneratedIndexes, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
 import { filterRenderableResourceLinks, getResourceLinkPresentation } from "@/lib/resource-links";
+import { withBasePath } from "@/lib/site-base";
 import { filterRenderableRecordingImages } from "@/lib/site-assets";
 import type { Credit, PersonRole } from "@/lib/schema";
 
@@ -77,7 +78,7 @@ const renderCreditLabel = (credit: Credit) => {
       <h1>{title}</h1>
       {displayModel.subtitle && displayModel.subtitle !== title && <p class="page-lead">{displayModel.subtitle}</p>}
       <p class="page-note">
-        <a href={work ? `/works/${work.id}/` : "#"}>{work?.title ?? "未知作品"}</a>
+        <a href={work ? withBasePath(`/works/${work.id}/`) : "#"}>{work?.title ?? "未知作品"}</a>
         {composer ? ` / ${getWebsiteDisplay(composer).heading}` : ""}
       </p>
     </div>
@@ -105,7 +106,7 @@ const renderCreditLabel = (credit: Credit) => {
                   const person = resolveCreditPerson(credit);
                   const href = person ? indexes.personIndex[person.id]?.href : undefined;
                   const label = renderCreditLabel(credit);
-                  return href ? <a href={href}>{label}</a> : <span>{label}</span>;
+                  return href ? <a href={withBasePath(href)}>{label}</a> : <span>{label}</span>;
                 })}
               </dd>
             </>
@@ -172,7 +173,7 @@ const renderCreditLabel = (credit: Credit) => {
             {presentedLinks.map((link) => (
               <li>
                 <a
-                  href={link.href}
+                  href={withBasePath(link.href)}
                   target={link.linkType === "local" ? undefined : "_blank"}
                   rel={link.linkType === "local" ? undefined : "noreferrer"}
                   data-local-resource-link={link.linkType === "local" ? "true" : undefined}

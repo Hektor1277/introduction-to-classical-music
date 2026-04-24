@@ -3,6 +3,7 @@ import DirectoryBrowser from "@/components/DirectoryBrowser.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildComposerDirectoryEntry } from "@/lib/directory";
 import { readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { withBasePath } from "@/lib/site-base";
 
 const [site, library] = await Promise.all([readGeneratedSite(), readGeneratedLibrary()]);
 
@@ -32,7 +33,7 @@ const entries = library.composers.map((composer) => {
     .map((work) => work.title);
 
   return buildComposerDirectoryEntry(composer, {
-    href: `/composers/${composer.slug}/`,
+    href: withBasePath(`/composers/${composer.slug}/`),
     representativeWorks,
   });
 });

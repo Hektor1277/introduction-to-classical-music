@@ -32,6 +32,15 @@ const markdown = new MarkdownIt({
   breaks: true,
 });
 
+function normalizeBasePath(value: string | undefined) {
+  const trimmed = String(value || "/").trim();
+  if (!trimmed || trimmed === "/") {
+    return "/";
+  }
+  const withLeadingSlash = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  return withLeadingSlash.endsWith("/") ? withLeadingSlash : `${withLeadingSlash}/`;
+}
+
 function applyImageSizeAnnotations(rendered: string) {
   return rendered.replace(
     /<p>\s*(<img\b[^>]*>)\s*\{size=(small|medium|large|full)\}\s*<\/p>/gi,
@@ -43,7 +52,7 @@ export function validateArticles(input: unknown) {
   return articleCollectionSchema.parse(input);
 }
 
-export function renderArticleMarkdown(markdownSource: string) {
+export function renderArticleMarkdown(markdownSource: string, options: { basePath?: string } = {}) {
   const rendered = applyImageSizeAnnotations(markdown.render(String(markdownSource ?? "")));
   return sanitizeHtml(rendered, {
     allowedTags: [
@@ -81,13 +90,22 @@ export function renderArticleMarkdown(markdownSource: string) {
         target: "_blank",
         rel: "noreferrer",
       }),
-      img: (tagName, attribs) => ({
-        tagName,
-        attribs: {
-          ...attribs,
-          loading: "lazy",
-        },
-      }),
+      img: (tagName, attribs) => {
+        const normalizedBase = normalizeBasePath(options.basePath);
+        const source = String(attribs.src || "");
+        const sourceWithBase =
+          normalizedBase !== "/" && source.startsWith("/") && !source.startsWith(normalizedBase)
+            ? `${normalizedBase}${source.slice(1)}`
+            : source;
+        return {
+          tagName,
+          attribs: {
+            ...attribs,
+            src: sourceWithBase,
+            loading: "lazy",
+          },
+        };
+      },
     },
   });
 }

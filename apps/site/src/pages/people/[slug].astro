@@ -4,6 +4,7 @@ import ExpandableSummary from "@/components/ExpandableSummary.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildRecordingDisplayTitle, getDisplayData, getWebsiteDisplay } from "@/lib/display";
 import { loadPersonLinks, readGeneratedArticles, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { withBasePath } from "@/lib/site-base";
 
 export async function getStaticPaths() {
   const resolveCanonicalId = (personId: string, personLinks: { canonicalPersonLinks: Record<string, string> }) => {
@@ -69,7 +70,7 @@ const appearances = library.recordings
     <section class="section-stack section-stack--tight">
       {appearances.length ? appearances.map(({ recording, work, composer, recordingTitle }) => (
         <article class="line-entry">
-          <h2><a href={`/recordings/${recording.id}/`}>{recordingTitle}</a></h2>
+          <h2><a href={withBasePath(`/recordings/${recording.id}/`)}>{recordingTitle}</a></h2>
           <p class="list-card__subtitle">{composer ? getWebsiteDisplay(composer).heading : "未知作曲家"} / {work?.title ?? "未知作品"}</p>
         </article>
       )) : <p class="page-note">该人物暂未关联版本条目。</p>}

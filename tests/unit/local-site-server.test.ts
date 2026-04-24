@@ -1,9 +1,20 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import http from "node:http";
 import os from "node:os";
 import path from "node:path";
 
 const tempDirs: string[] = [];
+
+async function canBindLoopbackPort() {
+  const probe = http.createServer();
+  return await new Promise<boolean>((resolve) => {
+    probe.once("error", () => resolve(false));
+    probe.listen(0, "127.0.0.1", () => {
+      probe.close(() => resolve(true));
+    });
+  });
+}
 
 afterEach(async () => {
   vi.resetModules();
@@ -17,6 +28,10 @@ afterEach(async () => {
 
 describe("local site server", () => {
   it("serves a built site directory over a local http url", async () => {
+    if (!(await canBindLoopbackPort())) {
+      return;
+    }
+
     const tempRoot = await mkdtemp(path.join(os.tmpdir(), "classical-local-site-"));
     tempDirs.push(tempRoot);
     const siteRoot = path.join(tempRoot, "build", "site");
@@ -35,6 +50,10 @@ describe("local site server", () => {
   });
 
   it("opens local resources through the same-origin bridge route", async () => {
+    if (!(await canBindLoopbackPort())) {
+      return;
+    }
+
     const tempRoot = await mkdtemp(path.join(os.tmpdir(), "classical-local-site-"));
     tempDirs.push(tempRoot);
     const siteRoot = path.join(tempRoot, "build", "site");

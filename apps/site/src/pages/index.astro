@@ -3,6 +3,7 @@ import DailyRecommendations from "@/components/DailyRecommendations.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildRecordingDisplayModel } from "@/lib/display";
 import { readGeneratedArticles, readGeneratedLibrary, readGeneratedSite } from "@/lib/library-store";
+import { withBasePath } from "@/lib/site-base";
 import { resolveSiteImageSrc } from "@/lib/site-assets";
 import { buildFeaturedArticles } from "@/lib/site-content";
 
@@ -31,7 +32,7 @@ const recommendationItems = library.recordings.map((recording) => {
     ensembleSecondary: display.daily.ensembleSecondary,
     datePlacePrimary: display.daily.datePlacePrimary,
     datePlaceSecondary: display.daily.datePlaceSecondary,
-    href: `/recordings/${recording.id}/`,
+    href: withBasePath(`/recordings/${recording.id}/`),
     imageSrc: resolveSiteImageSrc(recording.images[0]?.src ?? ""),
   };
 });
@@ -61,7 +62,7 @@ const featuredArticles = buildFeaturedArticles(articles, 10);
         {featuredArticles.map((item) => (
           <article class="line-entry">
             <div>
-              <h3><a href={item.href}>{item.title}</a></h3>
+              <h3><a href={withBasePath(item.href)}>{item.title}</a></h3>
               <p>{item.summary || "点击进入专栏正文。"}</p>
             </div>
             <span>{item.updatedAt}</span>

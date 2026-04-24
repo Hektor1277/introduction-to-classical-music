@@ -7,22 +7,27 @@ import path from "node:path";
 
 import { openTargetInShell } from "./open-target.js";
 
-async function findAvailablePort(preferredPort: number) {
+async function findAvailablePort(preferredPort: number, options: { maxAttempts?: number; host?: string } = {}) {
+  const host = options.host || "127.0.0.1";
+  const maxAttempts = options.maxAttempts || 20;
   let port = preferredPort;
-  while (true) {
+  let attempts = 0;
+  while (port <= 65535 && attempts <= maxAttempts) {
     const available = await new Promise<boolean>((resolve) => {
       const tester = net.createServer();
       tester.once("error", () => resolve(false));
       tester.once("listening", () => {
         tester.close(() => resolve(true));
       });
-      tester.listen(port, "127.0.0.1");
+      tester.listen(port, host);
     });
     if (available) {
       return port;
     }
     port += 1;
+    attempts += 1;
   }
+  throw new Error(`No available port found in range starting from ${preferredPort}`);
 }
 
 export function createLocalSiteServer(options: {

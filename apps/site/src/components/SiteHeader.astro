@@ -1,10 +1,12 @@
 ---
+import { withBasePath } from "@/lib/site-base";
+
 const navItems = [
-  { href: "/", label: "首页" },
-  { href: "/composers/", label: "作曲家" },
-  { href: "/conductors/", label: "指挥" },
-  { href: "/search/", label: "搜索" },
-  { href: "/about/", label: "关于" },
+  { href: withBasePath("/"), label: "首页" },
+  { href: withBasePath("/composers/"), label: "作曲家" },
+  { href: withBasePath("/conductors/"), label: "指挥" },
+  { href: withBasePath("/search/"), label: "搜索" },
+  { href: withBasePath("/about/"), label: "关于" },
 ];
 ---
 
@@ -24,7 +26,7 @@ const navItems = [
           <path d="M10.5 4.5a6 6 0 1 0 0 12a6 6 0 0 0 0-12Zm0-1.5a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15Zm6.1 12.54l4.43 4.42l-1.06 1.06l-4.42-4.43z"></path>
         </svg>
       </button>
-      <form action="/search/" class="site-search" role="search">
+      <form action={withBasePath("/search/")} class="site-search" role="search">
         <label class="sr-only" for="global-search">搜索</label>
         <input id="global-search" name="q" type="search" placeholder="搜索作曲家、指挥、乐团、类型、作品" />
       </form>

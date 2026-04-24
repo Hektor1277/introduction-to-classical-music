@@ -79,4 +79,3 @@ export function mergeSiteConfigPatch(current: SiteConfig, patch: SiteConfigPatch
   };
 }
 
-

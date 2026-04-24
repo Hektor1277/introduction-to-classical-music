@@ -3,6 +3,7 @@ import path from "node:path";
 
 import type { RecordingImage } from "@/lib/schema";
 import { getRuntimePaths } from "../../../../packages/data-core/src/app-paths.js";
+import { withBasePath } from "@/lib/site-base";
 
 function normalizeLocalAssetPath(src: string) {
   return decodeURIComponent(src.split(/[?#]/, 1)[0] || "")
@@ -41,7 +42,7 @@ export function resolveSiteImageSrc(src: string, assetExists: (src: string) => b
   if (!isLocalSiteAssetPath(trimmed)) {
     return trimmed;
   }
-  return assetExists(trimmed) ? trimmed : "";
+  return assetExists(trimmed) ? withBasePath(trimmed) : "";
 }
 
 export function filterRenderableRecordingImages(

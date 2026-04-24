@@ -39,6 +39,7 @@ const {
 
 <script>
   import { buildSearchGroups, normalizeSearchQuery, SEARCH_PANEL_KIND_ORDER } from "@/lib/search-panel";
+  import { withBasePath } from "@/lib/site-base";
   import type { SearchPanelEntry } from "@/lib/search-panel";
 
   declare global {
@@ -91,7 +92,8 @@ const {
       }
     }
     const suffix = params.toString();
-    return suffix ? `${window.location.pathname}?${suffix}` : window.location.pathname;
+    const pathname = withBasePath("/search/");
+    return suffix ? `${pathname}?${suffix}` : pathname;
   };
 
   const renderPagination = (group: SearchPanelGroup, query: string, pageByKind: SearchPageState) => {
@@ -139,7 +141,7 @@ const {
           .map(
             (entry) => `
               <li class="search-result">
-                <a href="${escapeHtml(entry.href)}">
+                <a href="${escapeHtml(withBasePath(entry.href))}">
                   <strong>${escapeHtml(entry.primaryText)}</strong>
                   <span>${escapeHtml(entry.secondaryText ?? "")}</span>
                 </a>
