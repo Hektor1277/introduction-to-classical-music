@@ -100,6 +100,7 @@ function primeRuntimeEnvironment() {
   process.env.ICM_APP_DATA_DIR = app.getPath("userData");
   process.env.ICM_RUNTIME_MODE = "bundle";
   process.env.ICM_DEFAULT_LIBRARY_DIR = resolvePreferredDefaultLibraryDir();
+  process.env.ICM_SITE_BASE = "/";
 }
 
 async function migrateLegacyInstalledLibraryIfNeeded() {
