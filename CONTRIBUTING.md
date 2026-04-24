@@ -32,3 +32,7 @@
 - `docs/release/*`
 - `CHANGELOG.md`
 - `RELEASING.md`（如流程发生变化）
+
+脚本命令整理与迁移请参考：
+
+- `docs/dev/script-migration.md`
