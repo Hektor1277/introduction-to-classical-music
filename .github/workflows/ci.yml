@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "**"
+    tags:
+      - "v*"
   pull_request:
 
 jobs:
@@ -21,6 +23,7 @@ jobs:
       - run: npm run build
 
   windows-package:
+    if: github.ref_type != 'tag'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,3 +39,25 @@ jobs:
       - run: npm run check
       - run: npm run build
       - run: npm run package:windows
+
+  windows-release:
+    if: github.ref_type == 'tag'
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: npm run bootstrap:windows
+      - run: npm run doctor:windows
+      - run: npm run check
+      - run: npm run build
+      - run: npm run desktop:dist:release
